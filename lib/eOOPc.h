@@ -148,6 +148,14 @@
 		#define eSELF(c) c * self = (c*)eOBJ
 	
 	/**
+	* upCast "self" to parent struct type. Parent struct type must be first struct member publically
+	* Can only be called from scope where child object is instantiated
+	* @param c Struct type
+	* @param v Variable name to use
+	*/
+		#define ePARENT(c, v) struct c * v = (struct c*) self
+	
+	/**
 	* Get the value of a protected variable 'p' within object 'o'
 	* Prints to stderr if property is private
 	* @param o Object
