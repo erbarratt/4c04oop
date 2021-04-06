@@ -2,6 +2,7 @@
 #define INC_4C04_PROGRAM_H
 
 	#include "eOOPc.h"
+	#include "strings.h"
 	
 	/**
 	* Public Program4c04_t declaration

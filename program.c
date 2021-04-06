@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdio.h>
 #include "lib/program.h"
-#include "lib/strings.h"
 
 	typedef struct {
 		
@@ -16,7 +15,7 @@
 			void (*disassembleCode)(void * eOBJ);
 			
 		//private props
-			eEXTENDS(String4c04_t*, strings);
+			struct String4c04_t* strings;
 		
 	} Program4c04_t;
 
@@ -29,8 +28,8 @@
 		{
 			eSELF(Program4c04_t);
 			
-			//instantiate parent object
-				eNEW_NOARGS_P(String4c04_t, self->strings);
+			//instantiate sub object
+				eNEW_NOARGS_S(String4c04_t, self->strings);
 			
 			//bind params
 				self->memLength = 256;
@@ -56,7 +55,7 @@
 			char line [50] = "";
 			char num[5];
 			char cycles[10];
-		
+
 			for(uint8_t i = 0; i < 128; i++){
 				strncpy(self->code[i], self->strings->strncatcat(strcpy(line, "$"), 49, self->strings->hex(i, 2, num),": NOP c2", NULL), 12);
 			}

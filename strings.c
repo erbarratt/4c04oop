@@ -3,7 +3,7 @@
 #include <string.h>
 #include "lib/strings.h"
 #include "lib/eOOPc.h"
-
+	
 	typedef struct {
 	
 		//public methods

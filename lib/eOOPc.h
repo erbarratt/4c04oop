@@ -16,7 +16,7 @@
 	* @param p Struct name
 	* @param n Property name
 	*/
-		#define eEXTENDS(p,n) struct p n
+		//#define eEXTENDS(p,n) struct p n
 
 	/**
 	* helper macro to denote that this parent is upcastable (this macro must be first element of containing
@@ -69,7 +69,7 @@
 	* @param c Struct type
 	* @param o Object variable name
 	*/
-		#define eNEW_NOARGS_P(c,o) o = (struct c *)malloc(sizeof(struct c)); eNEW_INS_NOARGS(c,o)
+		#define eNEW_NOARGS_S(c,o) o = (struct c *)malloc(sizeof(struct c)); eNEW_INS_NOARGS(c,o)
 
 	
 	/**

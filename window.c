@@ -26,7 +26,7 @@
 				void (*closeWindow)(void * eOBJ);
 				
 			//private props
-				eEXTENDS(Debug4c04_t*, debug);
+				struct Debug4c04_t* debug;
 				
 			//private methods
 			
@@ -43,8 +43,8 @@
 			
 			//bind properties
 			
-				//instantiate parent object
-					eNEW_NOARGS_P(Debug4c04_t, self->debug);
+				//instantiate sub object
+					eNEW_NOARGS_S(Debug4c04_t, self->debug);
 			
 				//set public window sizes
 					self->height = height;
