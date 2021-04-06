@@ -13,18 +13,18 @@
 
 	/**
 	* add a parent class struct to gain access to it's public methods
-	* @param p Struct name
-	* @param n Property name
+	* @param c Class
+	* @param p Property name
 	*/
-		//#define eEXTENDS(p,n) struct p n
+		#define eEXTENDS(c,p) struct c p
 
 	/**
 	* helper macro to denote that this parent is upcastable (this macro must be first element of containing
 	* struct for this to be true)
-	* @param p Struct name
-	* @param n Property name
+	* @param c Class
+	* @param p Property name
 	*/
-		#define eDIR_EXTENDS(p,n) eEXTENDS(p, n)
+		#define eDIR_EXTENDS(c,p) eEXTENDS(c,p)
 	
 	/**
 	* Instantiate an object 'o*' of type 'c' by using function 'c_instatiate()'
@@ -35,7 +35,7 @@
 		#define eNEW_INS(c,o, ...) c##_instantiate(o, __VA_ARGS__)
 	
 	/**
-	* Call allocation method and imediately fire instatiation function for heap object
+	* Call allocation method and imediately fire instantiation function for heap object
 	* @param c Struct type
 	* @param o Object variable name
 	* @param ... any further arguments
@@ -43,12 +43,12 @@
 		#define eNEW(c,o, ...) struct c*o = (struct c *)malloc(sizeof(struct c)); eNEW_INS(c,o, __VA_ARGS__)
 	
 	/**
-	* Call allocation method and imediately fire instatiation function for heap object, sub struct
+	* Call allocation method and imediately fire instantiation function for heap object, sub struct
 	* @param c Struct type
 	* @param o Object variable name
 	* @param ... any further arguments
 	*/
-		#define eNEW_P(c,o, ...) o = (struct c *)malloc(sizeof(struct c)); eNEW_INS(c,o, __VA_ARGS__)
+		#define eNEW_S(c,o, ...) o = (struct c *)malloc(sizeof(struct c)); eNEW_INS(c,o, __VA_ARGS__)
 	
 		/**
 	* Instantiate an object 'o*' of type 'c' by using function 'c_instatiate()', no arguments
@@ -58,19 +58,25 @@
 		#define eNEW_INS_NOARGS(c,o) c##_instantiate(o)
 	
 	/**
-	* Call allocation method and imediately fire instatiation function for heap object, no arguments
+	* Call allocation method and imediately fire instantiation function for heap object, no arguments
 	* @param c Struct type
 	* @param o Object variable name
 	*/
 		#define eNEW_NOARGS(c,o) struct c*o = (struct c *)malloc(sizeof(struct c)); eNEW_INS_NOARGS(c,o)
 	
 	/**
-	* Call allocation method and imediately fire instatiation function for heap object, no arguments, sub struct
+	* Call allocation method and imediately fire instantiation function for heap object, no arguments, sub struct
 	* @param c Struct type
 	* @param o Object variable name
 	*/
 		#define eNEW_NOARGS_S(c,o) o = (struct c *)malloc(sizeof(struct c)); eNEW_INS_NOARGS(c,o)
-
+	
+	/**
+	* Instantiate a parent class
+	* @param c Struct type
+	* @param p Property variable name
+	*/
+		#define eNEW_PARENT(c, p) c##_instantiate(&p)
 	
 	/**
 	* public property DECLARATION
@@ -153,7 +159,7 @@
 	* @param c Struct type
 	* @param v Variable name to use
 	*/
-		#define ePARENT(c, v) struct c * v = (struct c*) self
+		#define ePARENT(c, v) struct c * v = (struct c *)self
 	
 	/**
 	* Get the value of a protected variable 'p' within object 'o'

@@ -8,6 +8,9 @@
 	* Public Program4c04_t declaration
 	*/
 		struct Program4c04_t {
+
+			//parent - must be full struct and first
+				eDIR_EXTENDS(String4c04_t, strings);
 			
 			//public props
 				char code[128][100];
