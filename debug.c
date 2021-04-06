@@ -18,7 +18,9 @@
 	* @param void* eOBJ Self object
 	* @return void
 	*/
-		void Debug4c04_t_instantiate(void * eOBJ){ eSELF(Debug4c04_t);
+		void Debug4c04_t_instantiate(void * eOBJ)
+		{
+			eSELF(Debug4c04_t);
 			
 			//bind methods
 				

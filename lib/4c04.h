@@ -6,5 +6,6 @@
 	#include "eOOPc.h"
 	#include "window.h"
 	#include "debug.h"
+	#include "strings.h"
 
 #endif //INC_4C04_4C04_H
