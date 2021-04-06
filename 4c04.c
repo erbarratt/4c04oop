@@ -38,17 +38,19 @@
 
 int main(void){
 
-	//console_print("4c04 L EOT CPU Emulator\nSystem Booting...\n", 0);
+	eNEW_NA(Debug4c04_t, console);
+	
+	console->consoleLog("4c04 L EOT CPU Emulator\nSystem Booting...\n");
 
 	//system_restart();
 	
 	//program_load();
 	
-	//console_print("Program Loaded...\n", 0);
+	console->consoleLog("Program Loaded...\n");
 	
 	//code_disassemble();
 	
-	//console_print("Opening Window...\n", 0);
+	console->consoleLog("Opening Window...\n");
 	
 	eNEW(Window4c04_t, window, 640, 1000);
 	

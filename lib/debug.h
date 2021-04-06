@@ -9,14 +9,14 @@
 			//public props
 			
 			//public methods
-				void (*consoleLog)(void * eOBJ, char * msg);
-				void (*consoleErr)(void * eOBJ, char * msg);
+				void (*consoleLog)(char * msg);
+				void (*consoleErr)(char * msg);
 			
 		};
 	
 	//public function delcaration footprint
 		void Debug4c04_t_instantiate(void * eOBJ);
-		void Debug4c04_t_consoleLog(void * eOBJ, char * msg);
-		void Debug4c04_t_consoleErr(void * eOBJ, char * msg);
+		void Debug4c04_t_consoleLog(char * msg);
+		void Debug4c04_t_consoleErr(char * msg);
 
 #endif //INC_4C04_DEBUG_H

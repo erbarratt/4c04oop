@@ -8,8 +8,8 @@
 		//public props
 		
 		//public methods
-			void (*consoleLog)(void * eOBJ, char * msg);
-			void (*consoleErr)(void * eOBJ, char * msg);
+			void (*consoleLog)(char * msg);
+			void (*consoleErr)(char * msg);
 		
 	} Debug4c04_t;
 
@@ -32,7 +32,7 @@
 	* Print to console
 	* @return void
 	*/
-		void Debug4c04_t_consoleLog(void * eOBJ, char * msg){ eSELF(Debug4c04_t);
+		void Debug4c04_t_consoleLog(char * msg){
 			printf("%s", msg);
 		}
 		
@@ -40,7 +40,7 @@
 	* Print to stderr
 	* @return void
 	*/
-		void Debug4c04_t_consoleErr(void * eOBJ, char * msg){ eSELF(Debug4c04_t);
+		void Debug4c04_t_consoleErr(char * msg){
 			fprintf(stderr, "%s", msg);
 			exit(1);
 		}

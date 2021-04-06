@@ -59,7 +59,7 @@
 					
 				//if not set, then probably on only terminal.
 					if (self->display == NULL) {
-						eMETH(self->debug, consoleErr, "\x1b[31mCannot open display. Run from linux desktop GUI or through Xming + PuTTy on Windows.\n");
+						self->debug->consoleErr("\x1b[31mCannot open display. Run from linux desktop GUI or through Xming + PuTTy on Windows.\n");
 					}
 				
 				//get default screen (screen 1) of system
