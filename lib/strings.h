@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 /**
-* Public Window4c04_t declaration
+* Public String4c04_t declaration
 */
 		struct String4c04_t {
 			

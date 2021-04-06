@@ -2,7 +2,7 @@
 #define INC_4C04_DEBUG_H
 
 	/**
-	* Public Window4c04_t declaration
+	* Public Debug4c04_t declaration
 	*/
 		struct Debug4c04_t {
 			
