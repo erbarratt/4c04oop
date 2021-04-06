@@ -1,6 +1,6 @@
 /**
 *
-* 4c04 L EOT Processor Emulator
+* 4c04 L EOT Processor Emulator, oop edition
 *
 * The 4c04 is a fictional virtual CPU, complete with it's own assembly language.
 *
