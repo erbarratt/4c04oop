@@ -42,7 +42,6 @@ int main(void){
 	eNEW_NOARGS(Program4c04_t, program);
 	
 	console->consoleLog("4c04 L EOT CPU Emulator\nSystem Booting...\n");
-
 	//system_restart();
 	
 	//program_load();

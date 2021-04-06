@@ -28,8 +28,5 @@
 	
 	//public function delcaration footprint
 		void Window4c04_t_instantiate(void * eOBJ, unsigned int height, unsigned int width);
-		void Window4c04_randKeyCodeEvnt(void * eOBJ);
-		void Window4c04_getNextEvent(void * eOBJ);
-		void Window4c04_closeWindow(void * eOBJ);
 
 #endif //INC_4C04_WINDOW_H

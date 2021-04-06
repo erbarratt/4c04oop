@@ -18,31 +18,7 @@
 			struct String4c04_t* strings;
 		
 	} Program4c04_t;
-
-	/**
-	* Instantiate Program Object
-	* @param void* eOBJ Self object
-	* @return void
-	*/
-		void Program4c04_t_instantiate(void * eOBJ)
-		{
-			eSELF(Program4c04_t);
-			
-			//instantiate sub object
-				eNEW_NOARGS_S(String4c04_t, self->strings);
-			
-			//bind params
-				self->memLength = 256;
-				self->progMemLoc = 0x80;
-				self->stackMemLoc = 0x7F;
-			
-			//bind methods
-				
-				//public
-					self->disassembleCode = &Program4c04_t_disassembleCode;
-					
-		}
-		
+	
 	/**
 	* Dissassemble the memory program into coded lines to display
 	* @param void* eOBJ Self object
@@ -93,4 +69,30 @@
 			//}
 		
 		}
+
+	/**
+	* Instantiate Program Object
+	* @param void* eOBJ Self object
+	* @return void
+	*/
+		void Program4c04_t_instantiate(void * eOBJ)
+		{
+			eSELF(Program4c04_t);
+			
+			//instantiate sub object
+				eNEW_NOARGS_S(String4c04_t, self->strings);
+			
+			//bind params
+				self->memLength = 256;
+				self->progMemLoc = 0x80;
+				self->stackMemLoc = 0x7F;
+			
+			//bind methods
+				
+				//public
+					self->disassembleCode = &Program4c04_t_disassembleCode;
+					
+		}
+		
+	
 	

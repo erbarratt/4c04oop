@@ -22,6 +22,5 @@
 	
 	//public function delcaration footprint
 		void Program4c04_t_instantiate(void * eOBJ);
-		void Program4c04_t_disassembleCode(void * eOBJ);
 
 #endif //INC_4C04_PROGRAM_H

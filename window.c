@@ -31,6 +31,52 @@
 			//private methods
 			
 		} Window4c04_t;
+		
+	/**
+	* Generate a random keycode event and send to display
+	* @param void* eOBJ Self object
+	* @return void
+	*/
+		void Window4c04_randKeyCodeEvnt(void * eOBJ){ eSELF(Window4c04_t);
+		
+			//create a random keypress event and send it, so the following XNextEvent catches it
+				XKeyEvent event;
+				event.display     = self->display;
+				event.window      = self->window;
+				event.root        = RootWindow(self->display, self->screen);
+				event.subwindow   = None;
+				event.time        = CurrentTime;
+				event.x           = 1;
+				event.y           = 1;
+				event.x_root      = 1;
+				event.y_root      = 1;
+				event.same_screen = True;
+				event.keycode     = XKeysymToKeycode(self->display, 42);
+				event.state       = 0;
+				event.type = KeyPress;
+				
+				XSendEvent(self->display, self->window, True, KeyPressMask, (XEvent *)&event);
+		
+		}
+
+	/**
+	* Get next event from event queue in display
+	* @param void* eOBJ Self object
+	* @return void
+	*/
+		void Window4c04_getNextEvent(void * eOBJ){ eSELF(Window4c04_t);
+			XNextEvent(self->display, self->evnt);
+		}
+
+	/**
+	* Close the display
+	* @param void* eOBJ Self object
+	* @return void
+	*/
+		void Window4c04_closeWindow(void * eOBJ){ eSELF(Window4c04_t);
+			XCloseDisplay(self->display);
+		}
+
 
 	/**
 	* Create the window of a given height and width
@@ -98,47 +144,3 @@
 			
 		}
 	
-	/**
-	* Generate a random keycode event and send to display
-	* @param void* eOBJ Self object
-	* @return void
-	*/
-		void Window4c04_randKeyCodeEvnt(void * eOBJ){ eSELF(Window4c04_t);
-		
-			//create a random keypress event and send it, so the following XNextEvent catches it
-				XKeyEvent event;
-				event.display     = self->display;
-				event.window      = self->window;
-				event.root        = RootWindow(self->display, self->screen);
-				event.subwindow   = None;
-				event.time        = CurrentTime;
-				event.x           = 1;
-				event.y           = 1;
-				event.x_root      = 1;
-				event.y_root      = 1;
-				event.same_screen = True;
-				event.keycode     = XKeysymToKeycode(self->display, 42);
-				event.state       = 0;
-				event.type = KeyPress;
-				
-				XSendEvent(self->display, self->window, True, KeyPressMask, (XEvent *)&event);
-		
-		}
-
-	/**
-	* Get next event from event queue in display
-	* @param void* eOBJ Self object
-	* @return void
-	*/
-		void Window4c04_getNextEvent(void * eOBJ){ eSELF(Window4c04_t);
-			XNextEvent(self->display, self->evnt);
-		}
-
-	/**
-	* Close the display
-	* @param void* eOBJ Self object
-	* @return void
-	*/
-		void Window4c04_closeWindow(void * eOBJ){ eSELF(Window4c04_t);
-			XCloseDisplay(self->display);
-		}
