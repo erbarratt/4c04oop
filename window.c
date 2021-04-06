@@ -44,7 +44,7 @@
 			//bind properties
 			
 				//instantiate parent object
-					eNEW_NA_P(Debug4c04_t, self->debug);
+					eNEW_NOARGS_P(Debug4c04_t, self->debug);
 			
 				//set public window sizes
 					self->height = height;
@@ -97,7 +97,6 @@
 					self->closeWindow = &Window4c04_closeWindow;
 			
 		}
-
 	
 	/**
 	* Generate a random keycode event and send to display

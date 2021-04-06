@@ -30,7 +30,7 @@
 			eSELF(Program4c04_t);
 			
 			//instantiate parent object
-				eNEW_NA_P(String4c04_t, self->strings);
+				eNEW_NOARGS_P(String4c04_t, self->strings);
 			
 			//bind params
 				self->memLength = 256;

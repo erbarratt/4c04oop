@@ -55,21 +55,21 @@
 	* @param c Struct type
 	* @param o Object variable name
 	*/
-		#define eNEW_INS_NA(c,o) c##_instantiate(o)
+		#define eNEW_INS_NOARGS(c,o) c##_instantiate(o)
 	
 	/**
 	* Call allocation method and imediately fire instatiation function for heap object, no arguments
 	* @param c Struct type
 	* @param o Object variable name
 	*/
-		#define eNEW_NA(c,o) struct c*o = (struct c *)malloc(sizeof(struct c)); eNEW_INS_NA(c,o)
+		#define eNEW_NOARGS(c,o) struct c*o = (struct c *)malloc(sizeof(struct c)); eNEW_INS_NOARGS(c,o)
 	
 	/**
 	* Call allocation method and imediately fire instatiation function for heap object, no arguments, sub struct
 	* @param c Struct type
 	* @param o Object variable name
 	*/
-		#define eNEW_NA_P(c,o) o = (struct c *)malloc(sizeof(struct c)); eNEW_INS_NA(c,o)
+		#define eNEW_NOARGS_P(c,o) o = (struct c *)malloc(sizeof(struct c)); eNEW_INS_NOARGS(c,o)
 
 	
 	/**
@@ -178,7 +178,7 @@
 	* @param m The method
 	* @param ... Other args
 	*/
-		#define eMETH(o, m, ...) (*o->m)(o, __VA_ARGS__)
+		#define eCALL(o, m, ...) (*o->m)(o, __VA_ARGS__)
 	
 	/**
 	* Method call wrapper that passes object as first argument for use of eSELF(), no arguments
@@ -186,7 +186,7 @@
 	* @param m The method
 	* @param ... Other args
 	*/
-		#define eMETH_NA(o, m) (*o->m)(o)
+		#define eCALL_NOARGS(o, m) (*o->m)(o)
 		
 	/**
 	* Free memory on heap for object

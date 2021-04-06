@@ -38,19 +38,18 @@
 
 int main(void){
 
-	eNEW_NA(Debug4c04_t, console);
+	eNEW_NOARGS(Debug4c04_t, console);
+	eNEW_NOARGS(Program4c04_t, program);
 	
 	console->consoleLog("4c04 L EOT CPU Emulator\nSystem Booting...\n");
 
 	//system_restart();
 	
-	eNEW_NA(Program4c04_t, program);
-	
 	//program_load();
 	
 	console->consoleLog("Program Loaded...\n");
 	
-	eMETH_NA(program, disassembleCode);
+	eCALL_NOARGS(program, disassembleCode);
 	
 	console->consoleLog("Opening Window...\n");
 	
@@ -67,11 +66,11 @@ int main(void){
 			usleep(autoPlaySlow ? 200000 : 500);
 			
 			//send random key code so auto continues
-				eMETH_NA(window, randKeycodeEvnt);
+				eCALL_NOARGS(window, randKeycodeEvnt);
 			
 		}
 		
-		eMETH_NA(window, getNextEvent);
+		eCALL_NOARGS(window, getNextEvent);
 		
 		if (window->evnt->type == KeyPress) {
 			
@@ -125,7 +124,7 @@ int main(void){
 		
 	}
 	
-	eMETH_NA(window, closeWindow);
+	eCALL_NOARGS(window, closeWindow);
 	
 	eDESTROY(window);
 	
