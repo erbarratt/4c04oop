@@ -10,14 +10,14 @@
 		struct Window4c04_t {
 			
 			//public props
-				ePROP_DEC(unsigned int, height);
-				ePROP_DEC(unsigned int, width);
-				ePROP_DEC(XEvent*, evnt);
-				ePROP_DEC(Display*, display);
-				ePROP_DEC(Window, window);
-				ePROP_DEC(int, screen);
-				ePROP_DEC(XFontStruct*, font);
-				ePROP_DEC(GC, gc);
+				unsigned int height;
+				unsigned int width;
+				XEvent* evnt;
+				Display* display;
+				Window window;
+				int screen;
+				XFontStruct* font;
+				GC gc;
 			
 			//public methods
 				void (*randKeycodeEvnt)(void * eOBJ);

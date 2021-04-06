@@ -44,11 +44,13 @@ int main(void){
 
 	//system_restart();
 	
+	eNEW_NA(Program4c04_t, program);
+	
 	//program_load();
 	
 	console->consoleLog("Program Loaded...\n");
 	
-	//code_disassemble();
+	eMETH_NA(program, disassembleCode);
 	
 	console->consoleLog("Opening Window...\n");
 	

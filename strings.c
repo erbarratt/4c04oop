@@ -5,12 +5,10 @@
 #include "lib/eOOPc.h"
 
 	typedef struct {
-		
-		//public props
-		
+	
 		//public methods
 			char * (*strncatcat)(char * dest, size_t max, const char* strArgs, ...);
-			char * (*hex)(char * dest, uint32_t hex, size_t size);
+			char * (*hex)(uint32_t hex, size_t size, char * dest);
 		
 	} String4c04_t;
 
@@ -56,7 +54,7 @@
 	* Print to stderr
 	* @return void
 	*/
-		char * String4c04_t_hex(char * dest, uint32_t hex, size_t size)
+		char * String4c04_t_hex(uint32_t hex, size_t size, char * dest)
 		{
 			//clamp size to at least 1 char
 				size = (size < 1) ? 1 : size;
