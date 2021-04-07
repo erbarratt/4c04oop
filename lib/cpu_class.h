@@ -7,6 +7,17 @@
 		struct CPU4c04_t_vmt{
 		
 			void (*loadInstructions)(void * eOBJ);
+			
+			void        (*setDrawflag)(void * eOBJ, DRAWFLAGS f, bool v);
+			uint8_t     (*getDrawflag)(void * eOBJ, DRAWFLAGS f);
+			uint8_t     (*read)(void * eOBJ, uint8_t addr, bool incPCO);
+			void        (*write)(void * eOBJ, uint8_t addr, uint8_t data);
+			void        (*stackPush)(void * eOBJ, uint8_t data);
+			uint8_t     (*stackPop)(void * eOBJ);
+			uint8_t     (*regVal)(void * eOBJ, uint8_t reg);
+			uint8_t     (*setReg)(void * eOBJ, uint8_t reg, uint8_t data);
+			uint8_t     (*setIr)(void * eOBJ, uint8_t reg, uint8_t data);
+			uint8_t     (*setPco)(void * eOBJ, uint8_t data);
 		
 			void (*NOP)(void * eOBJ);
 
@@ -44,6 +55,17 @@
 		
 		void CPU4c04_t_loadInstructions(void * eOBJ);
 		
+		void        CPU4c04_t_setDrawflag(void * eOBJ, DRAWFLAGS f, bool v);
+		uint8_t     CPU4c04_t_getDrawflag(void * eOBJ, DRAWFLAGS f);
+		uint8_t     CPU4c04_t_read(void * eOBJ, uint8_t addr, bool incPCO);
+		void        CPU4c04_t_write(void * eOBJ, uint8_t addr, uint8_t data);
+		void        CPU4c04_t_stackPush(void * eOBJ, uint8_t data);
+		uint8_t     CPU4c04_t_stackPop(void * eOBJ);
+		uint8_t     CPU4c04_t_regVal(void * eOBJ, uint8_t reg);
+		uint8_t     CPU4c04_t_setReg(void * eOBJ, uint8_t reg, uint8_t data);
+		uint8_t     CPU4c04_t_setIr(void * eOBJ, uint8_t reg, uint8_t data);
+		uint8_t     CPU4c04_t_setPco(void * eOBJ, uint8_t data);
+		
 		void CPU4c04_t_NOP(void * eOBJ);
 
 		void CPU4c04_t_LRV(void * eOBJ);
@@ -73,17 +95,6 @@
 
 		void CPU4c04_t_PRS(void * eOBJ);
 		void CPU4c04_t_PSR(void * eOBJ);
-		
-		void        CPU4c04_t_setDrawflag(DRAWFLAGS f, bool v);
-		uint8_t     CPU4c04_t_getDrawflag(DRAWFLAGS f);
-		uint8_t     CPU4c04_t_read(uint8_t addr, bool incPCO);
-		void        CPU4c04_t_write(uint8_t addr, uint8_t data);
-		void        CPU4c04_t_stackPush(uint8_t data);
-		uint8_t     CPU4c04_t_stackPop();
-		uint8_t     CPU4c04_t_regVal(uint8_t reg);
-		uint8_t     CPU4c04_t_setReg(uint8_t reg, uint8_t data);
-		uint8_t     CPU4c04_t_setIr(uint8_t reg, uint8_t data);
-		uint8_t     CPU4c04_t_setPco(uint8_t data);
 
 	/**
 	* CPU private class structure
@@ -140,6 +151,7 @@
 					DRAWFLAGS drawflags;
 					
 			//public methods
+				uint8_t (*findHexFromCommand)(void * eOBJ, uint8_t * command);
 				void (*reset)(void * eOBJ);
 				void (*execute)(void * eOBJ);
 				

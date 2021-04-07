@@ -69,12 +69,14 @@
 				DRAWFLAGS drawflags;
 				
 			//public methods
+				uint8_t (*findHexFromCommand)(void * eOBJ, uint8_t * command);
 				void (*reset)(void * eOBJ);
 				void (*execute)(void * eOBJ);
 			
 		};
 		
 		void CPU4c04_t_instantiate(void * eOBJ);
+		uint8_t CPU4c04_t_findHexFromCommand(void * eOBJ, uint8_t * command);
 		void CPU4c04_t_reset(void * eOBJ);
 		void CPU4c04_t_execute(void * eOBJ);
 

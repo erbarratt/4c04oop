@@ -1,16 +1,27 @@
 #include "lib/cpu_pub.h"
 #include "lib/cpu_class.h"
-#include <stdio.h>
 
 	/**
 	* Instantiate CPU VMT object
 	* @param void* eOBJ self
+	* @return void
 	*/
 		void CPU4c04_t_vmt_instantiate(void * eOBJ)
 		{
 			eSELF(CPU4c04_t_vmt);
 			
 			self->loadInstructions = &CPU4c04_t_loadInstructions;
+			
+			self->setDrawflag = &CPU4c04_t_setDrawflag;
+			self->getDrawflag = &CPU4c04_t_getDrawflag;
+			self->read = &CPU4c04_t_read;
+			self->write = &CPU4c04_t_write;
+			self->stackPush = &CPU4c04_t_stackPush;
+			self->stackPop = &CPU4c04_t_stackPop;
+			self->regVal = &CPU4c04_t_regVal;
+			self->setReg = &CPU4c04_t_setReg;
+			self->setIr = &CPU4c04_t_setIr;
+			self->setPco = &CPU4c04_t_setPco;
 			
 			self->NOP = &CPU4c04_t_NOP;
 			self->LRV = &CPU4c04_t_LRV;
@@ -44,83 +55,9 @@
 		}
 	
 	/**
-	* Instantiate CPU object
-	* @param void* eOBJ self
-	*/
-		void CPU4c04_t_instantiate(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
-			
-			//public methods
-				self->reset = &CPU4c04_t_reset;
-				self->execute = &CPU4c04_t_reset;
-				
-			//private methods vmt
-				self->vmt = eNEW(CPU4c04_t_vmt);
-				eCONSTRUCT(CPU4c04_t_vmt, self->vmt);
-			
-			//reset CPU now, which also acts as definition for struct members
-				eCALLna(self, reset);
-			
-		}
-	
-	/**
-	* Reset CPU object properties to default values
-	* @param void* eOBJ self
-	*/
-		void CPU4c04_t_reset(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
-			
-			//define instructions into cpu object
-				self->vmt->loadInstructions(self);
-			
-			//fill ram+rom with NOPS
-				for(int i = 0; i < 256; i++){
-					self->RAM[i] = 0x00;
-				}
-			
-			//internal registers
-				self->IR1 = 0x0000;
-					//@1
-				self->IR2 = 0x0000;
-					//@1
-				self->AR0 = 0x00;
-					//@1
-				self->AR1 = 0x00;
-					//@1
-				self->AR2 = 0x00;
-					//@1
-				self->AR3 = 0x00;
-					//@1
-					
-			//flag bits
-				self->C = 0;
-				self->Z = 0;
-				self->V = 0;
-				self->N = 0;
-			
-			//reset program counter to start of program memory (ROM)
-				self->PCO = PROG_MEM_LOC;
-				self->lastOpAddr = PROG_MEM_LOC;
-					//@1
-					
-				self->OPC = 0x00;
-				
-			//reset stack pointer to bottom of stack
-				self->STP = STACK_MEM_LOC;
-				
-			//set remaing cycles to 0, which indicates read new instruction
-				self->CRE = 0;
-				
-			//reset drawflags for draw functions
-				self->drawflags = 0x00;
-		
-		}
-	
-	/**
 	* Define instruction set and copy to object struct member
 	* @param void* eOBJ self
+	* @return void
 	*/
 		void CPU4c04_t_loadInstructions(void * eOBJ)
 		{
@@ -165,11 +102,51 @@
 				memcpy(self->instructions, instructions, sizeof(instructions));
 		
 		}
+		
+		void        CPU4c04_t_setDrawflag(void * eOBJ, DRAWFLAGS f, bool v)
+		{
+			eSELF(CPU4c04_t);
+		}
+		uint8_t     CPU4c04_t_getDrawflag(void * eOBJ, DRAWFLAGS f)
+		{
+			eSELF(CPU4c04_t);
+		}
+		uint8_t     CPU4c04_t_read(void * eOBJ, uint8_t addr, bool incPCO)
+		{
+			eSELF(CPU4c04_t);
+		}
+		void        CPU4c04_t_write(void * eOBJ, uint8_t addr, uint8_t data)
+		{
+			eSELF(CPU4c04_t);
+		}
+		void        CPU4c04_t_stackPush(void * eOBJ, uint8_t data)
+		{
+			eSELF(CPU4c04_t);
+		}
+		uint8_t     CPU4c04_t_stackPop(void * eOBJ)
+		{
+			eSELF(CPU4c04_t);
+		}
+		uint8_t     CPU4c04_t_regVal(void * eOBJ, uint8_t reg)
+		{
+			eSELF(CPU4c04_t);
+		}
+		uint8_t     CPU4c04_t_setReg(void * eOBJ, uint8_t reg, uint8_t data)
+		{
+			eSELF(CPU4c04_t);
+		}
+		uint8_t     CPU4c04_t_setIr(void * eOBJ, uint8_t reg, uint8_t data)
+		{
+			eSELF(CPU4c04_t);
+		}
+		uint8_t     CPU4c04_t_setPco(void * eOBJ, uint8_t data)
+		{
+			eSELF(CPU4c04_t);
+		}
 
 	void CPU4c04_t_NOP(void * eOBJ)
 		{
 			eSELF(CPU4c04_t);
-			printf("NOP\n");
 		}
 	
 		void CPU4c04_t_LRV(void * eOBJ)
@@ -264,4 +241,146 @@
 		void CPU4c04_t_PSR(void * eOBJ)
 		{
 			eSELF(CPU4c04_t);
+		}
+
+	/**
+	* Instantiate CPU object
+	* @param void* eOBJ self
+	* @return void
+	*/
+		void CPU4c04_t_instantiate(void * eOBJ)
+		{
+			eSELF(CPU4c04_t);
+			
+			//public methods
+				self->findHexFromCommand = &CPU4c04_t_findHexFromCommand;
+				self->reset = &CPU4c04_t_reset;
+				self->execute = &CPU4c04_t_reset;
+				
+			//private methods vmt
+				self->vmt = eNEW(CPU4c04_t_vmt);
+				eCONSTRUCT(CPU4c04_t_vmt, self->vmt);
+			
+			//reset CPU now, which also acts as definition for struct members
+				eCALLna(self, reset);
+			
+		}
+		
+	/**
+	* Find a command using a string index
+	* @param void* eOBJ selfg index
+	* @param uint8_t * command Command
+	* @return uint8_t
+	*/
+		uint8_t CPU4c04_t_findHexFromCommand(void * eOBJ, uint8_t * command)
+		{
+			eSELF(CPU4c04_t);
+	
+			for(uint16_t k = 0; k < 64; k++){
+				
+				if(strcmp((char*)command, self->instructions[k].name) == 0){
+					return (uint8_t)k;
+				}
+				
+			}
+			
+			return 0;
+		
+		}
+	
+	/**
+	* Reset CPU object properties to default values
+	* @param void* eOBJ self
+	* @return void
+	*/
+		void CPU4c04_t_reset(void * eOBJ)
+		{
+			eSELF(CPU4c04_t);
+			
+			//define instructions into cpu object
+				self->vmt->loadInstructions(self);
+			
+			//fill ram+rom with NOPS
+				for(int i = 0; i < 256; i++){
+					self->RAM[i] = 0x00;
+				}
+			
+			//internal registers
+				self->IR1 = 0x0000;
+					//@1
+				self->IR2 = 0x0000;
+					//@1
+				self->AR0 = 0x00;
+					//@1
+				self->AR1 = 0x00;
+					//@1
+				self->AR2 = 0x00;
+					//@1
+				self->AR3 = 0x00;
+					//@1
+					
+			//flag bits
+				self->C = 0;
+				self->Z = 0;
+				self->V = 0;
+				self->N = 0;
+			
+			//reset program counter to start of program memory (ROM)
+				self->PCO = PROG_MEM_LOC;
+				self->lastOpAddr = PROG_MEM_LOC;
+					//@1
+					
+				self->OPC = 0x00;
+				
+			//reset stack pointer to bottom of stack
+				self->STP = STACK_MEM_LOC;
+				
+			//set remaing cycles to 0, which indicates read new instruction
+				self->CRE = 0;
+				
+			//reset drawflags for draw functions
+				self->drawflags = 0x00;
+		
+		}
+		
+		void CPU4c04_t_execute(void * eOBJ)
+		{
+			eSELF(CPU4c04_t);
+			
+			//clear any drawflags before execution to see what's happened this cycle
+			self->drawflags = 0x00;
+	
+			if(self->CRE == 0){
+			
+				//check to see if program has ended, if so loop back
+					if(self->PCO > 0xfb){
+						self->PCO = 0x80;
+					}
+			
+				//set last opcode location for drawing code lines
+					self->lastOpAddr = self->PCO;
+			
+				//read next instruction
+					self->IR1 = self->vmt->read(self, self->PCO, true);
+					
+					self->vmt->setDrawflag(self, IR1, true);
+					//@1
+					self->INS = self->instructions[self->IR1];
+					
+				//set OP
+					self->OPC = (uint8_t)self->IR1;
+					self->vmt->setDrawflag(self, OPC, true);
+					
+				//set default cycles
+					self->CRE = self->INS.cycles;
+			
+			} else {
+			
+				(*self->instructions[self->OPC].operate)(self);
+				//@1
+				
+				self->CRE--;
+			
+			}
+		
 		}
