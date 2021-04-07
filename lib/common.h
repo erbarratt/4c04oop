@@ -1,0 +1,8 @@
+#ifndef INC_4C04_COMMON_H
+#define INC_4C04_COMMON_H
+
+#define MEM_LENGTH 256
+#define PROG_MEM_LOC 0x80
+#define STACK_MEM_LOC 0x7F
+
+#endif //INC_4C04_COMMON_H

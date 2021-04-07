@@ -1,43 +1,15 @@
-
-//public declaration file
-#include "lib/window.h"
-
-//only this private definition file needs public header for private property
-#include "lib/debug.h"
-	
-	/**
-	* Private Window4c04_t declaration
-	*/
-		typedef struct  {
-			
-			//public props
-				unsigned int height;
-				unsigned int width;
-				XEvent* evnt;
-				Display* display;
-				Window window;
-				int screen;
-				XFontStruct* font;
-				GC gc;
-			
-			//public methods
-				void (*randKeycodeEvnt)(void * eOBJ);
-				void (*getNextEvent)(void * eOBJ);
-				void (*closeWindow)(void * eOBJ);
-				
-			//private props
-				struct Debug4c04_t* debug;
-				
-			//private methods
-			
-		} Window4c04_t;
+#include "lib/window_pub.h"         //public declaration
+#include "lib/window_class.h"       //private typedef declaration
+#include "lib/debug_pub.h"          //member
 		
 	/**
 	* Generate a random keycode event and send to display
 	* @param void* eOBJ Self object
 	* @return void
 	*/
-		void Window4c04_randKeyCodeEvnt(void * eOBJ){ eSELF(Window4c04_t);
+		void Window4c04_randKeyCodeEvnt(void * eOBJ)
+		{
+			eSELF(Window4c04_t);
 		
 			//create a random keypress event and send it, so the following XNextEvent catches it
 				XKeyEvent event;
@@ -85,12 +57,15 @@
 	* @param unsigned int width Window width
 	* @return void
 	*/
-		void Window4c04_t_instantiate(void * eOBJ, unsigned int height, unsigned int width){ eSELF(Window4c04_t);
+		void Window4c04_t_instantiate(void * eOBJ, unsigned int height, unsigned int width)
+		{
+			eSELF(Window4c04_t);
 			
 			//bind properties
 			
 				//instantiate sub object
-					eNEW_NOARGS_S(Debug4c04_t, self->debug);
+					self->debug = eNEW(Debug4c04_t);
+					eCONSTRUCT(Debug4c04_t, self->debug);
 			
 				//set public window sizes
 					self->height = height;
@@ -105,7 +80,7 @@
 					
 				//if not set, then probably on only terminal.
 					if (self->display == NULL) {
-						self->debug->consoleErr("\x1b[31mCannot open display. Run from linux desktop GUI or through Xming + PuTTy on Windows.\n");
+						self->debug->consoleErr("\x1b[31mCannot open display. Run from linux desktop GUI or through Xming + PuTTy on Windows.\x1b[0m\n");
 					}
 				
 				//get default screen (screen 1) of system

@@ -15,6 +15,23 @@ message(STATUS "X11_LIBRARIES = ${X11_LIBRARIES}")
 include_directories(${X11_INCLUDE_DIR})
 
 add_executable(
-               4c04 lib/eOOPc.h 4c04.c lib/4c04.h window.c lib/window.h debug.c lib/debug.h strings.c lib/strings.h program.c lib/program.h)
+               4c04
+               lib/eOOPc.h
+        4c04.c
+               lib/4c04.h
+        cpu_class.c
+        lib/cpu_pub.h
+        window_class.c
+               lib/window_pub.h
+        debug_class.c
+               lib/debug_pub.h
+        strings_class.c
+               lib/strings_pub.h
+        program_class.c
+               lib/program_pub.h
+               lib/program_pri.h
+            lib/window_class.h
+        lib/common.h
+        lib/cpu_class.h)
 
 target_link_libraries(4c04 X11)

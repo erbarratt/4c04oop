@@ -12,19 +12,12 @@
 		#define eIMPLEMENTS(i) eINTERFACE_##i()
 
 	/**
-	* add a parent class struct to gain access to it's public methods
-	* @param c Class
-	* @param p Property name
-	*/
-		#define eEXTENDS(c,p) struct c p
-
-	/**
 	* helper macro to denote that this parent is upcastable (this macro must be first element of containing
 	* struct for this to be true)
 	* @param c Class
 	* @param p Property name
 	*/
-		#define eDIR_EXTENDS(c,p) eEXTENDS(c,p)
+		#define eINHERITS(c,p) struct c p
 	
 	/**
 	* Instantiate an object 'o*' of type 'c' by using function 'c_instatiate()'
@@ -32,7 +25,7 @@
 	* @param o Object variable name
 	* @param ... any further arguments
 	*/
-		#define eNEW_INS(c,o, ...) c##_instantiate(o, __VA_ARGS__)
+		#define eCONSTRUCT(c, ...) c##_instantiate(__VA_ARGS__)
 	
 	/**
 	* Call allocation method and imediately fire instantiation function for heap object
@@ -40,43 +33,7 @@
 	* @param o Object variable name
 	* @param ... any further arguments
 	*/
-		#define eNEW(c,o, ...) struct c*o = (struct c *)malloc(sizeof(struct c)); eNEW_INS(c,o, __VA_ARGS__)
-	
-	/**
-	* Call allocation method and imediately fire instantiation function for heap object, sub struct
-	* @param c Struct type
-	* @param o Object variable name
-	* @param ... any further arguments
-	*/
-		#define eNEW_S(c,o, ...) o = (struct c *)malloc(sizeof(struct c)); eNEW_INS(c,o, __VA_ARGS__)
-	
-		/**
-	* Instantiate an object 'o*' of type 'c' by using function 'c_instatiate()', no arguments
-	* @param c Struct type
-	* @param o Object variable name
-	*/
-		#define eNEW_INS_NOARGS(c,o) c##_instantiate(o)
-	
-	/**
-	* Call allocation method and imediately fire instantiation function for heap object, no arguments
-	* @param c Struct type
-	* @param o Object variable name
-	*/
-		#define eNEW_NOARGS(c,o) struct c*o = (struct c *)malloc(sizeof(struct c)); eNEW_INS_NOARGS(c,o)
-	
-	/**
-	* Call allocation method and imediately fire instantiation function for heap object, no arguments, sub struct
-	* @param c Struct type
-	* @param o Object variable name
-	*/
-		#define eNEW_NOARGS_S(c,o) o = (struct c *)malloc(sizeof(struct c)); eNEW_INS_NOARGS(c,o)
-	
-	/**
-	* Instantiate a parent class
-	* @param c Struct type
-	* @param p Property variable name
-	*/
-		#define eNEW_PARENT(c, p) c##_instantiate(&p)
+		#define eNEW(c) (struct c *)malloc(sizeof(struct c))
 	
 	/**
 	* public property DECLARATION
@@ -147,6 +104,8 @@
 		#define ePRIV_PROP_FUNC_DEF_getset(c, t, p) ePRIV_PROP_FUNC_DEF_get(c, t, p) ePRIV_PROP_FUNC_DEF_set(c, t, p)
 		#define ePRIV_PROP_FUNC_DEF(c, t, p, m) ePRIV_PROP_FUNC_DEF_##m(c, t, p)
 	
+	
+	
 	/**
 	* Cast "self" back into the class type
 	* @param c Struct type
@@ -177,6 +136,8 @@
 	* @param var v The new value
 	*/
 		#define eSET(o, p, v) o->set_##p(o, v)
+
+	
 	
 	/**
 	* Method call wrapper that passes object as first argument for use of eSELF()
@@ -192,7 +153,7 @@
 	* @param m The method
 	* @param ... Other args
 	*/
-		#define eCALL_NOARGS(o, m) (*o->m)(o)
+		#define eCALLna(o,m) (*o->m)(o)
 		
 	/**
 	* Free memory on heap for object

@@ -1,17 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "lib/debug.h"
+#include "lib/debug_pub.h"
 #include "lib/eOOPc.h"
-
-	typedef struct {
-		
-		//public props
-		
-		//public methods
-			void (*consoleLog)(char * msg);
-			void (*consoleErr)(char * msg);
-		
-	} Debug4c04_t;
 
 	/**
 	* Create the window of a given height and width

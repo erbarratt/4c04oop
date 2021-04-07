@@ -1,16 +1,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
-#include "lib/strings.h"
+#include "lib/strings_pub.h"
 #include "lib/eOOPc.h"
-	
-	typedef struct {
-	
-		//public methods
-			char * (*strncatcat)(char * dest, size_t max, const char* strArgs, ...);
-			char * (*hex)(uint32_t hex, size_t size, char * dest);
-		
-	} String4c04_t;
 
 	/**
 	* Create the window of a given height and width

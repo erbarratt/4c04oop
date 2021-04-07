@@ -34,98 +34,116 @@
 * 		Launch via Putty from Ubuntu (./4c04)
 *
 */
-#include "lib/4c04.h"
+#include <unistd.h> //usleep
+#include <stdbool.h>
+#include <stdio.h>
+#include "lib/eOOPc.h"
+#include "lib/window_pub.h"
+#include "lib/debug_pub.h"
+#include "lib/program_pub.h"
 
 int main(void){
 
-	eNEW_NOARGS(Debug4c04_t, console);
-	eNEW_NOARGS(Program4c04_t, program);
+	struct Debug4c04_t* console = eNEW(Debug4c04_t);
+	eCONSTRUCT(Debug4c04_t, console);
 	
-	console->consoleLog("4c04 L EOT CPU Emulator\nSystem Booting...\n");
-	//system_restart();
 	
-	//program_load();
 	
-	console->consoleLog("Program Loaded...\n");
+	struct CPU4c04_t* cpu = eNEW(CPU4c04_t);
+	eCONSTRUCT(CPU4c04_t, cpu);
+
+	//struct Program4c04_t* program = eNEW(Program4c04_t);
 	
-	eCALL_NOARGS(program, disassembleCode);
+	//eCONSTRUCT(Program4c04_t, program, cpu);
+
+	//console->consoleLog("4c04 L EOT CPU Emulator\nSystem Booting...\n");
+	////system_restart();
+	//
+	////program_load();
+	//
+	//console->consoleLog("Program Loaded...\n");
+	//
+	//eCALLna(program,disassembleCode);
+	//
+	//console->consoleLog("Opening Window...\n");
+	//
+	struct Window4c04_t * window = eNEW(Window4c04_t);
+	eCONSTRUCT(Window4c04_t, window, 640, 1000);
+	eCALLna(window, getNextEvent);
 	
-	console->consoleLog("Opening Window...\n");
-	
-	eNEW(Window4c04_t, window, 640, 1000);
-	
-	//auto play?
-		bool autoPlaySlow = false;
-		bool autoPlayFast = false;
-	
-	while (1) {
-		
-		if(autoPlaySlow || autoPlayFast){
-			
-			usleep(autoPlaySlow ? 200000 : 500);
-			
-			//send random key code so auto continues
-				eCALL_NOARGS(window, randKeycodeEvnt);
-			
-		}
-		
-		eCALL_NOARGS(window, getNextEvent);
-		
-		if (window->evnt->type == KeyPress) {
-			
-			if(window->evnt->xkey.keycode == 24){
-			
-				//quit "q"
-					break;
-					
-			} else if (window->evnt->xkey.keycode == 27) {
-			
-				//restart "r"
-					//system_restart();
-					
-				//load program again
-					//program_load();
-					
-				//dissemble code
-					//code_disassemble();
-					
-				//draw current state
-					//draw_all(display, window, gc);
-			
-			} else if(window->evnt->xkey.keycode == 38){
-				
-				//autoplay toggle
-					autoPlaySlow = (autoPlaySlow) ? false : true;
-					autoPlayFast = false;
-			
-			}  else if(window->evnt->xkey.keycode == 39){
-				
-				//autoplay toggle
-					autoPlayFast = (autoPlayFast) ? false : true;
-					autoPlaySlow = false;
-			
-			} else {
-			
-				//progress through next cycle
-					//cpu_execute();
-					
-				//draw current state
-					//draw_all(display, window, gc);
-					
-			}
-			
-		} else {
-		
-			//all other events
-				//draw_all(display, window, gc);
-		
-		}
-		
-	}
-	
-	eCALL_NOARGS(window, closeWindow);
-	
-	eDESTROY(window);
+	//
+	////auto play?
+	//	bool autoPlaySlow = false;
+	//	bool autoPlayFast = false;
+	//
+	//while (1) {
+	//
+	//	if(autoPlaySlow || autoPlayFast){
+	//
+	//		usleep(autoPlaySlow ? 200000 : 500);
+	//
+	//		//send random key code so auto continues
+	//			eCALLna(window, randKeycodeEvnt);
+	//
+	//	}
+	//
+	//	eCALLna(window, getNextEvent);
+	//
+	//	if (window->evnt->type == KeyPress) {
+	//
+	//		if(window->evnt->xkey.keycode == 24){
+	//
+	//			//quit "q"
+	//				break;
+	//
+	//		} else if (window->evnt->xkey.keycode == 27) {
+	//
+	//			//restart "r"
+	//				//system_restart();
+	//
+	//			//load program again
+	//				//program_load();
+	//
+	//			//dissemble code
+	//				//code_disassemble();
+	//
+	//			//draw current state
+	//				//draw_all(display, window, gc);
+	//
+	//		} else if(window->evnt->xkey.keycode == 38){
+	//
+	//			//autoplay toggle
+	//				autoPlaySlow = (autoPlaySlow) ? false : true;
+	//				autoPlayFast = false;
+	//
+	//		}  else if(window->evnt->xkey.keycode == 39){
+	//
+	//			//autoplay toggle
+	//				autoPlayFast = (autoPlayFast) ? false : true;
+	//				autoPlaySlow = false;
+	//
+	//		} else {
+	//
+	//			//progress through next cycle
+	//				//cpu_execute();
+	//
+	//			//draw current state
+	//				//draw_all(display, window, gc);
+	//
+	//		}
+	//
+	//	} else {
+	//
+	//		//all other events
+	//			//draw_all(display, window, gc);
+	//
+	//	}
+	//
+	//}
+	//
+	//eCALLna(window, closeWindow);
+	//
+	//eDESTROY(window);
 	
 	return 0;
  

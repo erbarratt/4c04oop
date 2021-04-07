@@ -14,6 +14,9 @@
 				char * (*hex)(uint32_t hex, size_t size, char * dest);
 			
 		};
+		
+	//no private so, put typedef here
+		typedef struct String4c04_t String4c04_t;
 	
 	//public function delcaration footprint
 		void String4c04_t_instantiate(void * eOBJ);
