@@ -19,7 +19,7 @@
 			uint8_t     (*setIr)(void * eOBJ, uint8_t reg, uint8_t data);
 			uint8_t     (*setPco)(void * eOBJ, uint8_t data);
 		
-			void (*NOP)(void * eOBJ);
+			void (*NOP)();
 
 			void (*LRV)(void * eOBJ);
 			void (*LRM)(void * eOBJ);
@@ -66,7 +66,7 @@
 		uint8_t     CPU4c04_t_setIr(void * eOBJ, uint8_t reg, uint8_t data);
 		uint8_t     CPU4c04_t_setPco(void * eOBJ, uint8_t data);
 		
-		void CPU4c04_t_NOP(void * eOBJ);
+		void CPU4c04_t_NOP();
 
 		void CPU4c04_t_LRV(void * eOBJ);
 		void CPU4c04_t_LRM(void * eOBJ);

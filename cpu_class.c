@@ -296,105 +296,956 @@
 	////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////
 	//INSTRUCTIONS
-	void CPU4c04_t_NOP(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
-		}
 	
-		void CPU4c04_t_LRV(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
+	/*
+	* Instruction: No Operation
+	* @return void
+	*/
+		void CPU4c04_t_NOP(){
 		}
-		void CPU4c04_t_LRM(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
+		
+	/*
+	* Instruction: Load register from value
+	* 3 cycles
+	* Z,N
+	* @return void
+	*/
+		void CPU4c04_t_LRV(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+				
+				//load IR1 with the identifier for which register to finally load
+					case 3:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//load IR2 with the value at mem location
+					case 2:
+						self->vmt->setIr(self, 2, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//load the value at IR2 into register chosen in IR1
+					case 1:
+						self->vmt->setReg(self, self->IR1, self->IR2);
+						self->Z = (self->IR2 == 0x00);
+						self->N = ((self->IR2 & 0x0080) == 0x0080);
+					break;
+			
+			}
+			
 		}
-		void CPU4c04_t_LRR(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
+		
+	/*
+	* Instruction: Load register from memory addr
+	* 4 cycles
+	* Z,N
+	* @return void
+	*/
+		void CPU4c04_t_LRM(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+				
+				//load IR1 with the identifier for which register to finally load
+					case 4:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//load IR2 with the mem address for the value
+					case 3:
+						self->vmt->setIr(self, 2, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//load the value stored at mem location in IR2 into IR2
+					case 2:
+						self->vmt->setIr(self, 2, self->vmt->read(self, self->IR2, false));
+					break;
+					
+				//load the value at IR2 into register chosen in IR1, flags
+					case 1:
+						self->vmt->setReg(self, self->IR1, self->IR2);
+						self->Z = (self->IR2 == 0x00);
+						self->N = ((self->IR2 & 0x0080) == 0x0080);
+					break;
+			
+			}
+			
 		}
-		void CPU4c04_t_LRT(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
+		
+	/*
+	* Instruction: Load register from mem loc in other Register
+	* 4 cycles
+	* Z,N
+	* @return void
+	*/
+		void CPU4c04_t_LRR(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+				
+				//load IR1 with the identifier for which register to finally load
+					case 4:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//Set IR2 to be the reigster to take the mem loc from
+					case 3:
+						self->vmt->setIr(self, 2, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//set IR2 to be the value of the register set in IR2
+					case 2:
+						self->vmt->setIr(self, 2, self->vmt->read(self, self->vmt->regVal(self, self->IR2), true));
+					break;
+					
+				//load the value at IR2 into register chosen in IR1
+					case 1:
+						self->vmt->setReg(self, self->IR1, self->IR2);
+						self->Z = (self->IR2 == 0x00);
+						self->N = ((self->IR2 & 0x0080) == 0x0080);
+					break;
+			
+			}
+			
 		}
+		
+	/*
+	* Instruction: Load register by transfer from another register
+	* 4 cycles
+	* Z,N
+	* @return void
+	*/
+		void CPU4c04_t_LRT(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+				
+				//load IR1 with the identifier for which register to finally load into
+					case 4:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//Set IR2 to be the reigster to take the value from
+					case 3:
+						self->vmt->setIr(self, 2, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//set IR2 to be the value of the register set in IR2
+					case 2:
+						self->vmt->setIr(self, 2, self->vmt->regVal(self, self->IR2));
+					break;
+					
+				//load the value at IR2 into register chosen in IR1
+					case 1:
+						self->vmt->setReg(self, self->IR1, self->IR2);
+						self->Z = (self->IR2 == 0x00);
+						self->N = ((self->IR2 & 0x0080) == 0x0080);
+					break;
+			
+			}
+			
+		}
+		
+	/*
+	* Instruction: Store register at memory adddress in next read value
+	* 3 cycles
+	* @return void
+	*/
+		void CPU4c04_t_STV(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+			
+				//load IR1 with the identifier for which register to finally load
+					case 3:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//load IR2 with address of the destination memory location
+					case 2:
+						self->vmt->setIr(self, 2, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//store the value in the register chosen at IR1 into mem location IR2
+					case 1:
+						self->vmt->write(self, self->IR2, self->vmt->regVal(self, self->IR1));
+					break;
+			
+			}
+		
+		}
+		
+	/*
+	* Instruction: Store register at memory adddress of register set in next byte
+	* x cycles
+	* @return void
+	*/
+		void CPU4c04_t_STR(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+			
+				//load IR1 with the identifier for which register to finally load
+					case 4:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//load IR2 with the id or the register where the mem location is
+					case 3:
+						self->vmt->setIr(self, 2, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//get the memory location from the chosen register
+					case 2:
+						self->vmt->setIr(self,2, self->vmt->regVal(self,self->IR2));
+					break;
+					
+				//store the value in the register chosen at IR1 into mem location IR2
+					case 1:
+						self->vmt->write(self, self->IR2, self->vmt->regVal(self,self->IR1));
+					break;
+			
+			}
+		
+		}
+		
+	/*
+	* Instruction: Bump (Increment) value in register
+	* 4 cycles
+	* V,Z,N
+	* @return void
+	*/
+		void CPU4c04_t_BMP(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+			
+				//load IR1 with the identifier for which register to bump
+					case 4:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//set IR2 to be the value of the register set in IR2
+					case 3:
+						self->vmt->setIr(self,2, self->vmt->regVal(self,self->IR1));
+					break;
+					
+				//do bump
+					case 2:{
+					
+						uint16_t temp = self->IR2;
+						temp++;
+						self->vmt->setIr(self,2, (uint8_t) temp & 0xFF);
+						
+						//overflowed?
+							self->V = (temp > 255);
+						//now zero?
+							self->Z = (self->IR2 == 0);
+						//negative?
+							self->N = ((self->IR2 & 0x0080) == 0x0080);
+						
+					} break;
+					
+				//store the value in the register chosen at IR1 from IR2
+					case 1:{
+						
+						self->vmt->setReg(self, self->IR1, self->IR2);
+						
+					} break;
+			
+			}
+		
+		}
+		
+	/*
+	* Instruction: Squash (Decrement) value in register
+	* 4 cycles
+	* V,Z,N
+	* @return void
+	*/
+		void CPU4c04_t_SQR(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+			
+				//load IR1 with the identifier for which register to bump
+					case 4:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//set IR2 to be the value of the register set in IR2
+					case 3:
+						self->vmt->setIr(self,2, self->vmt->regVal(self,self->IR1));
+					break;
+					
+				//do bump
+					case 2:{
+					
+						uint16_t temp = self->IR2;
+						temp--;
+						self->vmt->setIr(self,2, (uint8_t) temp & 0xFF);
+						
+						//overflowed?
+							self->V = (temp > 255);
+						//now zero?
+							self->Z = (self->IR2 == 0);
+						//negative?
+							self->N = ((self->IR2 & 0x0080) == 0x0080);
+						
+					} break;
+					
+				//store the value in the register chosen at IR1 from IR2
+					case 1:{
+						
+						self->vmt->setReg(self, self->IR1, self->IR2);
+						
+					} break;
+			
+			}
+		
+		}
+		
 	
-		void CPU4c04_t_STV(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
-		}
-		void CPU4c04_t_STR(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
-		}
+	/**
+	* Instruction: Add with Carry In
+	*
+	* Explanation:
+	* The purpose of this function is to add a value to the accumulator and a carry bit. If
+	* the result is > 255 there is an overflow setting the carry bit. Ths allows you to
+	* chain together ADC instructions to add numbers larger than 8-bits. This in itself is
+	* simple, however the 6502 supports the concepts of Negativity/Positivity and Signed Overflow.
+	*
+	* 10000100 = 128 + 4 = 132 in normal circumstances, we know this as unsigned and it allows
+	* us to represent numbers between 0 and 255 (given 8 bits). The 6502 can also interpret
+	* this word as something else if we assume those 8 bits represent the range -128 to +127,
+	* i.e. it has become signed.
+	*
+	* Since 132 > 127, it effectively wraps around, through -128, to -124. This wraparound is
+	* called overflow, and this is a useful to know as it indicates that the calculation has
+	* gone outside the permissable range, and therefore no longer makes numeric sense.
+	*
+	* Note the implementation of ADD is the same in binary, this is just about how the numbers
+	* are represented, so the word 10000100 can be both -124 and 132 depending upon the
+	* context the programming is using it in. We can prove this!
+	*
+	*  10000100 =  132  or  -124
+	* +00010001 = + 17      + 17
+	*  ========    ===       ===     See, both are valid additions, but our interpretation of
+	*  10010101 =  149  or  -107     the context changes the value, not the hardware!
+	*
+	* In principle under the -128 to 127 range:
+	* 10000000 = -128, 11111111 = -1, 00000000 = 0, 00000000 = +1, 01111111 = +127
+	* therefore negative numbers have the most significant set, positive numbers do not
+	*
+	* To assist us, the 6502 can set the overflow flag, if the result of the addition has
+	* wrapped around. V <- ~(A^M) & A^(A+M+C) :D lol, let's work out why!
+	*
+	* Let's suppose we have A = 30, M = 10 and C = 0
+	*          A = 30 = 00011110
+	*          M = 10 = 00001010+
+	*     RESULT = 40 = 00101000
+	*
+	* Here we have not gone out of range. The resulting significant bit has not changed.
+	* So let's make a truth table to understand when overflow has occurred. Here I take
+	* the MSB of each component, where R is RESULT.
+	*
+	* A  M  R | V | A^R | A^M |~(A^M) |
+	* 0  0  0 | 0 |  0  |  0  |   1   |
+	* 0  0  1 | 1 |  1  |  0  |   1   |
+	* 0  1  0 | 0 |  0  |  1  |   0   |
+	* 0  1  1 | 0 |  1  |  1  |   0   |  so V = ~(A^M) & (A^R)
+	* 1  0  0 | 0 |  1  |  1  |   0   |
+	* 1  0  1 | 0 |  0  |  1  |   0   |
+	* 1  1  0 | 1 |  1  |  0  |   1   |
+	* 1  1  1 | 0 |  0  |  0  |   1   |
+	*
+	* We can see how the above equation calculates V, based on A, M and R. V was chosen
+	* based on the following hypothesis:
+	*       Positive Number + Positive Number = Negative Result -> Overflow
+	*       Negative Number + Negative Number = Positive Result -> Overflow
+	*       Positive Number + Negative Number = Either Result -> Cannot Overflow
+	*       Positive Number + Positive Number = Positive Result -> OK! No Overflow
+	*       Negative Number + Negative Number = Negative Result -> OK! NO Overflow
+	* @return uint8_t
+	*/
 	
-		void CPU4c04_t_BMP(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
+	/*
+	* Instruction: Add - <reg1> + <reg2>
+	* 5 cycles
+	* C,V,Z,N
+	* @return void
+	*/
+		void CPU4c04_t_ADD(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+			
+				//load IR1 with the identifier for which register to add and store answer in
+					case 5:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//load IR2 with the identifier for which other register to add
+					case 4:
+						self->vmt->setIr(self, 2, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//Get value of second register and resotre in IR2
+					case 3:
+						self->vmt->setIr(self,2, self->vmt->regVal(self,self->IR2));
+					break;
+					
+				//do addition into IR2 setting carry as necessary
+					case 2:
+					{
+					
+						uint8_t regVal = self->vmt->regVal(self,self->IR1);
+						uint16_t temp = (uint16_t)((uint16_t)regVal + (uint16_t)self->IR2 + (uint16_t)self->C);
+						
+						// The signed Overflow flag
+							self->V = (~((uint16_t)regVal ^ (uint16_t)self->IR2) & ((uint16_t)regVal ^ (uint16_t)temp)) & 0x0080;
+						
+						// The carry flag out exists in the high byte bit 0
+							self->C = temp > 255;
+							
+						// The Zero flag is set if the result is 0
+							self->Z = ((temp & 0x00FF) == 0);
+							
+						// The negative flag is set to the most significant bit of the result
+							self->N = ((temp & 0x0080) == 0x0080);
+							
+						self->vmt->setIr(self,2, (uint8_t)(temp & 0x00FF));
+						
+					}
+					break;
+					
+				//load the value at IR2 into register chosen in IR1
+					case 1:
+						self->vmt->setReg(self, self->IR1, self->IR2);
+					break;
+			
+			}
+		
 		}
-		void CPU4c04_t_SQR(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
+		
+	/**
+	* Instruction: Subtraction with Borrow In
+	* Function:    A = A - M - (1 - C)
+	* Flags Out:   C, V, N, Z
+	*
+	* Explanation:
+	* Given the explanation for ADC above, we can reorganise our data
+	* to use the same computation for addition, for subtraction by multiplying
+	* the data by -1, i.e. make it negative
+	*
+	* A = A - M - (1 - C)  ->  A = A + -1 * (M - (1 - C))  ->  A = A + (-M + 1 + C)
+	*
+	* To make a signed positive number negative, we can invert the bits and add 1
+	* (OK, I lied, a little bit of 1 and 2s complement :P)
+	*
+	*  5 = 00000101
+	* -5 = 11111010 + 00000001 = 11111011 (or 251 in our 0 to 255 range)
+	*
+	* The range is actually unimportant, because if I take the value 15, and add 251
+	* to it, given we wrap around at 256, the result is 10, so it has effectively
+	* subtracted 5, which was the original intention. (15 + 251) % 256 = 10
+	*
+	* Note that the equation above used (1-C), but this got converted to + 1 + C.
+	* This means we already have the +1, so all we need to do is invert the bits
+	* of M, the data(!) therfore we can simply add, exactly the same way we did
+	* before.
+	* @return uint8_t
+	*/
+		
+	/*
+	* Instruction: Subtract <reg1> - <reg2>, store in reg1
+	* 5 cycles
+	* C,V,Z,N
+	* @return void
+	*/
+		void CPU4c04_t_SUB(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+			
+				//load IR1 with the identifier for which register to subtract and store answer in
+					case 5:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//load IR2 with the identifier for which other register to subtract
+					case 4:
+						self->vmt->setIr(self, 2, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//Get value of second register and resotre in IR2
+					case 3:
+						self->vmt->setIr(self,2, self->vmt->regVal(self,self->IR2));
+					break;
+					
+				//do subtraction into IR2 setting carry as necessary
+					case 2:
+					{
+						uint16_t tempVal = ((uint16_t)self->IR2 ^ 0x00FF);
+						uint8_t regVal = self->vmt->regVal(self,self->IR1);
+						uint16_t temp = (uint16_t)((uint16_t)regVal + tempVal + (uint16_t)self->C);
+						
+						// The carry flag out exists in the high byte bit 0
+							self->C = temp > 255;
+							
+						// The Zero flag is set if the result is 0
+							self->Z = ((temp & 0x00FF) == 0);
+							
+						// The negative flag is set to the most significant bit of the result
+							self->N = ((temp & 0x0080) == 0x0080);
+							
+						self->vmt->setIr(self,2, (uint8_t)(temp & 0x00FF));
+						
+					}
+					break;
+					
+				//load the value at IR2 into register chosen in IR1
+					case 1:
+						self->vmt->setReg(self, self->IR1, self->IR2);
+					break;
+			
+			}
+		
 		}
-		void CPU4c04_t_ADD(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
+		
+	/*
+	* Instruction: Jump
+	* 2 cycles
+	* @return void
+	*/
+		void CPU4c04_t_JMP(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+			
+				//load IR1 with memory address to jump to
+					case 2:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//load IR2 with address of the destination memory location
+					case 1:
+						self->vmt->setPco(self, self->IR1);
+					break;
+			
+			}
+		
 		}
-		void CPU4c04_t_SUB(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
+		
+	/*
+	* Instruction: Jump if Zero = 0
+	* 2 cycles
+	* @return void
+	*/
+		void CPU4c04_t_JOC(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+			
+				//load IR1 with the condition for jump
+					case 3:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));break;
+					
+				//load IR2 with the location to jump to
+					case 2:
+						self->vmt->setIr(self, 2, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//Set PCO on condition
+					case 1:{
+					
+						switch(self->IR1){
+						
+							//Not empty, Z = 0
+								case 1:
+									if(self->Z == false){
+										self->vmt->setPco(self, self->IR2);
+									}
+								break;
+								
+							//empty, Z = 1
+								case 2:
+									if(self->Z == true){
+										self->vmt->setPco(self, self->IR2);
+									}
+								break;
+								
+							//No Carry, C = 0
+								case 3:
+									if(self->C == false){
+										self->vmt->setPco(self, self->IR2);
+									}
+								break;
+								
+							//Carry set, C = 1
+								case 4:
+									if(self->C == true){
+										self->vmt->setPco(self, self->IR2);
+									}
+								break;
+								
+							//Not Negative, N = 0
+								case 5:
+									if(self->N == false){
+										self->vmt->setPco(self, self->IR2);
+									}
+								break;
+								
+							//Negative set, N = 1
+								case 6:
+									if(self->N == true){
+										self->vmt->setPco(self, self->IR2);
+									}
+								break;
+								
+							//Not Overflowed, V = 0
+								case 7:
+									if(self->V == false){
+										self->vmt->setPco(self, self->IR2);
+									}
+								break;
+								
+							//Overflowed set, V = 1
+								case 8:
+									if(self->V == true){
+										self->vmt->setPco(self, self->IR2);
+									}
+								break;
+								
+							default:
+								//don't jump as condition not defined
+							break;
+						}
+						
+					} break;
+			
+			}
+		
 		}
-	
-		void CPU4c04_t_JMP(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
+		
+	/*
+	* Instruction: Jump to Subroutine
+	* 3 cycles
+	* @return void
+	*/
+		void CPU4c04_t_JSR(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+			
+				//put the next mem location onto stack
+					case 3:
+						self->vmt->stackPush(self, (uint8_t)(self->PCO+1));
+					break;
+				
+				//load IR1 with memory address to jump to
+					case 2:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//set new PCO
+					case 1:
+						self->vmt->setPco(self, self->IR1);
+					break;
+			
+			}
+		
 		}
-		void CPU4c04_t_JOC(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
+		
+	/*
+	* Instruction: Return from Subroutine
+	* 2 cycles
+	* @return void
+	*/
+		void CPU4c04_t_RFS(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+			
+				//Get the last mem loc from stack
+					case 2:
+						self->vmt->setIr(self,1, self->vmt->stackPop(self));
+					break;
+					
+				//set new PCO
+					case 1:
+						self->vmt->setPco(self, self->IR1);
+					break;
+			
+			}
+		
 		}
-		void CPU4c04_t_JSR(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
+		
+		
+	/*
+	* Instruction: Bitwise AND
+	* 4 cycles
+	* @return void
+	*/
+		void CPU4c04_t_AND(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+			
+				//load IR1 with the identifier for which register to do bitwise AND on
+					case 4:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//load IR2 with the second value of the bitwise AND
+					case 3:
+						self->vmt->setIr(self, 2, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//do the bitwise and using val from reg defined in IR1
+					case 2:
+						self->vmt->setIr(self,2, self->IR2 & self->vmt->regVal(self,self->IR1));
+					break;
+				
+				//store back to original register
+					case 1:
+						self->vmt->setReg(self, self->IR1, self->IR2);
+						//now zero?
+							self->Z = (self->IR2 == 0);
+						//negative?
+							self->N = ((self->IR2 & 0x0080) == 0x0080);
+					break;
+			}
+		
 		}
-		void CPU4c04_t_RFS(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
+		
+	/*
+	* Instruction: Bitwise OR
+	* 4 cycles
+	* @return void
+	*/
+		void CPU4c04_t_BOR(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+			
+				//load IR1 with the identifier for which register to do bitwise AND on
+					case 4:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//load IR2 with the second value of the bitwise AND
+					case 3:
+						self->vmt->setIr(self, 2, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//do the bitwise and using val from reg defined in IR1
+					case 2:
+						self->vmt->setIr(self,2, self->IR2 | self->vmt->regVal(self,self->IR1));
+					break;
+				
+				//store back to original register
+					case 1:
+						self->vmt->setReg(self, self->IR1, self->IR2);
+						//now zero?
+							self->Z = (self->IR2 == 0);
+						//negative?
+							self->N = ((self->IR2 & 0x0080) == 0x0080);
+					break;
+			}
+		
 		}
-	
-		void CPU4c04_t_AND(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
+		
+	/*
+	* Instruction: Bitwise AND between registers
+	* 4 cycles
+	* @return void
+	*/
+		void CPU4c04_t_NDR(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+			
+				//load IR1 with the identifier for which register to do bitwise AND on
+					case 4:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//load IR2 with the second value of the bitwise AND
+					case 3:
+						self->vmt->setIr(self, 2, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//do the bitwise and using val from reg defined in IR1
+					case 2:
+						self->vmt->setIr(self,2, self->vmt->regVal(self,self->IR1) & self->vmt->regVal(self,self->IR2));
+					break;
+				
+				//store back to original register
+					case 1:
+						self->vmt->setReg(self, self->IR1, self->IR2);
+						//now zero?
+							self->Z = (self->IR2 == 0);
+						//negative?
+							self->N = ((self->IR2 & 0x0080) == 0x0080);
+					break;
+			}
+		
 		}
-		void CPU4c04_t_BOR(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
+		
+	/*
+	* Instruction: Bitwise OR between registers
+	* 4 cycles
+	* @return void
+	*/
+		void CPU4c04_t_ORR(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+			
+				//load IR1 with the identifier for which register to do bitwise AND on
+					case 4:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//load IR2 with the second value of the bitwise AND
+					case 3:
+						self->vmt->setIr(self, 2, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//do the bitwise and using val from reg defined in IR1
+					case 2:
+						self->vmt->setIr(self,2, self->vmt->regVal(self,self->IR1) | self->vmt->regVal(self,self->IR2));
+					break;
+				
+				//store back to original register
+					case 1:
+						self->vmt->setReg(self, self->IR1, self->IR2);
+						//now zero?
+							self->Z = (self->IR2 == 0);
+						//negative?
+							self->N = ((self->IR2 & 0x0080) == 0x0080);
+					break;
+			}
+		
 		}
-		void CPU4c04_t_NDR(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
+		
+	/*
+	* Instruction: Bitwise XOR
+	* 4 cycles
+	* @return void
+	*/
+		void CPU4c04_t_XOV(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+			
+				//load IR1 with the identifier for which register to do bitwise AND on
+					case 4:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//load IR2 with the second value of the bitwise AND
+					case 3:
+						self->vmt->setIr(self, 2, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//do the bitwise and using val from reg defined in IR1
+					case 2:
+						self->vmt->setIr(self,2, self->IR2 ^ self->vmt->regVal(self,self->IR1));
+					break;
+				
+				//store back to original register
+					case 1:
+						self->vmt->setReg(self, self->IR1, self->IR2);
+						//now zero?
+							self->Z = (self->IR2 == 0);
+						//negative?
+							self->N = ((self->IR2 & 0x0080) == 0x0080);
+					break;
+			}
+		
 		}
-		void CPU4c04_t_ORR(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
+		
+	/*
+	* Instruction: Bitwise XOR between registers
+	* 4 cycles
+	* @return void
+	*/
+		void CPU4c04_t_XOR(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+			
+				//load IR1 with the identifier for which register to do bitwise AND on
+					case 4:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//load IR2 with the second value of the bitwise AND
+					case 3:
+						self->vmt->setIr(self, 2, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//do the bitwise and using val from reg defined in IR1
+					case 2:
+						self->vmt->setIr(self,2, self->vmt->regVal(self,self->IR1) ^ self->vmt->regVal(self,self->IR2));
+					break;
+				
+				//store back to original register
+					case 1:
+						self->vmt->setReg(self, self->IR1, self->IR2);
+						//now zero?
+							self->Z = (self->IR2 == 0);
+						//negative?
+							self->N = ((self->IR2 & 0x0080) == 0x0080);
+					break;
+			}
+		
 		}
-		void CPU4c04_t_XOV(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
+		
+	/*
+	* Instruction: Push Register to Stack
+	* 3 cycles
+	* @return void
+	*/
+		void CPU4c04_t_PRS(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+			
+				//load IR1 with the identifier for which register to push
+					case 3:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//load IR2 with the value from reg defined in IR1
+					case 2:
+						self->vmt->setIr(self,2, self->vmt->regVal(self,self->IR1));
+					break;
+					
+				//push to stack
+					case 1:
+						self->vmt->stackPush(self, self->IR2);
+					break;
+			}
+		
 		}
-		void CPU4c04_t_XOR(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
+		
+	/*
+	* Instruction: Pop Stack to Register
+	* 3 cycles
+	* @return void
+	*/
+		void CPU4c04_t_PSR(void * eOBJ){ eSELF(CPU4c04_t);
+		
+			switch(self->CRE){
+			
+				//load IR1 with the identifier for which register to push
+					case 3:
+						self->vmt->setIr(self, 1, self->vmt->read(self, self->PCO, true));
+					break;
+					
+				//load IR2 with the value from reg defined in IR1
+					case 2:
+						self->vmt->setIr(self,2, self->vmt->stackPop(self));
+					break;
+					
+				//populate register with value now in IR2
+					case 1:
+						self->vmt->setReg(self, self->IR1, self->IR2);
+					break;
+			}
+		
 		}
-	
-		void CPU4c04_t_PRS(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
-		}
-		void CPU4c04_t_PSR(void * eOBJ)
-		{
-			eSELF(CPU4c04_t);
-		}
+		
+	////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////
+	//PUBLIC METHODS
 
 	/**
 	* Instantiate CPU object
@@ -496,6 +1347,11 @@
 		
 		}
 		
+	/**
+	* Execute current instruction or look for next instruction
+	* @param void* eOBJ Self
+	* @return void
+	*/
 		void CPU4c04_t_execute(void * eOBJ)
 		{
 			eSELF(CPU4c04_t);
