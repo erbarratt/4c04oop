@@ -1,5 +1,6 @@
 #include "lib/cpu_pub.h"
 #include "lib/cpu_class.h"
+#include "lib/common.h"
 
 	/**
 	* Instantiate CPU VMT object
@@ -103,47 +104,199 @@
 		
 		}
 		
-		void        CPU4c04_t_setDrawflag(void * eOBJ, DRAWFLAGS f, bool v)
+	/*
+	* Set a flag for the draw functions to read
+	* @param void * eOBJ Self
+	* @param DRAWFLAGS f The bit
+	* @param bool v On or off
+	* @return void
+	*/
+		void CPU4c04_t_setDrawflag(void * eOBJ, DRAWFLAGS f, bool v)
 		{
 			eSELF(CPU4c04_t);
+			
+			if(v)
+				self->drawflags |= f;
+			else
+				self->drawflags &= ~f;
+			
 		}
-		uint8_t     CPU4c04_t_getDrawflag(void * eOBJ, DRAWFLAGS f)
+		
+	/**
+	* Returns the value of a specific bit of the drawflags
+	* @param void * eOBJ Self
+	* @param DRAWFLAGS f The bit
+	* @return uint8_t
+	 */
+		uint8_t CPU4c04_t_getDrawflag(void * eOBJ, DRAWFLAGS f)
 		{
 			eSELF(CPU4c04_t);
+			return ((self->drawflags & f) > 0) ? 1 : 0;
 		}
-		uint8_t     CPU4c04_t_read(void * eOBJ, uint8_t addr, bool incPCO)
+		
+	/*
+	* Read a byte from memory
+	* @param void * eOBJ Self
+	* @param uint8_t addrs
+	* @param bool incPCO Increment PCO or not
+	* @return uint8_t
+	*/
+		uint8_t CPU4c04_t_read(void * eOBJ, uint8_t addr, bool incPCO)
 		{
 			eSELF(CPU4c04_t);
+				if(incPCO){
+				self->PCO++;
+				eCALL(self->vmt,setDrawflag, PCO, true);
+			}
+			return self->RAM[addr];
 		}
-		void        CPU4c04_t_write(void * eOBJ, uint8_t addr, uint8_t data)
+		
+	/*
+	* Write a byte to memory
+	* @param void * eOBJ Self
+	* @param uint8_t addr
+	* @param uint8_t data
+	* @return void
+	*/
+		void CPU4c04_t_write(void * eOBJ, uint8_t addr, uint8_t data)
 		{
 			eSELF(CPU4c04_t);
+			self->RAM[addr] = data;
 		}
-		void        CPU4c04_t_stackPush(void * eOBJ, uint8_t data)
+		
+	/*
+	* Write a byte to the top of the stack
+	* @param void * eOBJ Self
+	* @param uint8_t data
+	* @return void
+	*/
+		void CPU4c04_t_stackPush(void * eOBJ, uint8_t data)
 		{
 			eSELF(CPU4c04_t);
+			eCALL(self->vmt, write, self->STP, data);
+			self->STP--;
+			eCALL(self->vmt,setDrawflag, STP, true);
 		}
-		uint8_t     CPU4c04_t_stackPop(void * eOBJ)
+		
+	/*
+	* Read a byte from the top of the stack
+	* @param void * eOBJ Self
+	* @return uint8_t
+	*/
+		uint8_t CPU4c04_t_stackPop(void * eOBJ)
 		{
 			eSELF(CPU4c04_t);
+			self->STP++;
+			uint8_t data = self->RAM[self->STP];
+			eCALL(self->vmt,setDrawflag, STP, true);
+			return data;
 		}
-		uint8_t     CPU4c04_t_regVal(void * eOBJ, uint8_t reg)
+		
+	/*
+	* Get the value in an addressable register
+	* @param void * eOBJ Self
+	* @param uint8_t reg Which register
+	* @return uint8_t
+	*/
+		uint8_t CPU4c04_t_regVal(void * eOBJ, uint8_t reg)
 		{
 			eSELF(CPU4c04_t);
+			switch(reg){
+				
+				case 0:
+				default:
+					return self->AR0;
+				case 1:
+					return self->AR1;
+				case 2:
+					return self->AR2;
+				case 3:
+					return self->AR3;
+				
+			}
 		}
-		uint8_t     CPU4c04_t_setReg(void * eOBJ, uint8_t reg, uint8_t data)
+		
+	/*
+	* Set the value in an addressable register
+	* @param void * eOBJ Self
+	* @param uint8_t reg Which register
+	* @param uint8_t data
+	* @return uint8_t
+	*/
+		uint8_t CPU4c04_t_setReg(void * eOBJ, uint8_t reg, uint8_t data)
 		{
 			eSELF(CPU4c04_t);
+			switch(reg){
+			
+				case 0:
+				default:
+					self->AR0 = data;
+					eCALL(self->vmt,setDrawflag, AR0, true);
+				break;
+				case 1:
+					self->AR1= data;
+					eCALL(self->vmt,setDrawflag, AR1, true);
+				break;
+				case 2:
+					self->AR2= data;
+					eCALL(self->vmt,setDrawflag, AR2, true);
+				break;
+				case 3:
+					self->AR3= data;
+					eCALL(self->vmt,setDrawflag, AR3, true);
+				break;
+				
+			}
+			
+			return data;
 		}
-		uint8_t     CPU4c04_t_setIr(void * eOBJ, uint8_t reg, uint8_t data)
+		
+	/*
+	* Set the value in an internal register
+	* @param void * eOBJ Self
+	* @param uint8_t reg Which register
+	* @param uint8_t data
+	* @return uint8_t
+	*/
+		uint8_t CPU4c04_t_setIr(void * eOBJ, uint8_t reg, uint8_t data)
 		{
 			eSELF(CPU4c04_t);
+			
+			switch(reg){
+		
+				case 1:
+				default:
+					self->IR1= data;
+					eCALL(self->vmt,setDrawflag, IR1, true);
+				break;
+				case 2:
+					self->IR2= data;
+					eCALL(self->vmt,setDrawflag, IR2, true);
+				break;
+				
+			}
+			
+			return data;
 		}
-		uint8_t     CPU4c04_t_setPco(void * eOBJ, uint8_t data)
+		
+	/*
+	* Set the PCO
+	* @param void * eOBJ Self
+	* @param uint8_t data
+	* @return uint8_t
+	*/
+		uint8_t CPU4c04_t_setPco(void * eOBJ, uint8_t data)
 		{
 			eSELF(CPU4c04_t);
+			self->PCO= data;
+			eCALL(self->vmt,setDrawflag, PCO, true);
+			return data;
 		}
 
+	////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////
+	//INSTRUCTIONS
 	void CPU4c04_t_NOP(void * eOBJ)
 		{
 			eSELF(CPU4c04_t);

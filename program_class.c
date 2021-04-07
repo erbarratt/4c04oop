@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdio.h>
 #include "lib/program_pub.h"
+#include "lib/common.h"
+	
 	
 	/**
 	* Instantiate Program Object
@@ -18,15 +20,52 @@
 			//bind params
 				self->cpu = cpu;
 				self->console = console;
-				self->memLength = 256;
-				self->progMemLoc = 0x80;
-				self->stackMemLoc = 0x7F;
 			
 			//bind public methods
+				self->isHexChar = &Program4c04_t_isHexChar;
+				self->getHexChar = &Program4c04_t_getHexChar;
 				self->loadProgram = &Program4c04_t_loadProgram;
 				self->disassembleCode = &Program4c04_t_disassembleCode;
 				
 		}
+		
+		bool Program4c04_t_isHexChar(uint8_t c)
+		{
+			if (
+				(c >= '0' && c <= '9') ||
+				(c >= 'a' && c <= 'f') ||
+				(c >= 'A' && c <= 'F')
+			){
+				return true;
+			}
+			
+			return false;
+		}
+		
+		uint8_t Program4c04_t_getHexChar(uint8_t c)
+		{
+	
+		//lookup 8 bit value of hex character to store in tmp
+			switch(c){
+				case '1': return 0x01;
+				case '2': return 0x02;
+				case '3': return 0x03;
+				case '4': return 0x04;
+				case '5': return 0x05;
+				case '6': return 0x06;
+				case '7': return 0x07;
+				case '8': return 0x08;
+				case '9': return 0x09;
+				case 'a': case 'A': return 0x0A;
+				case 'b': case 'B': return 0x0B;
+				case 'c': case 'C': return 0x0C;
+				case 'd': case 'D': return 0x0D;
+				case 'e': case 'E': return 0x0E;
+				case 'f': case 'F': return 0x0F;
+				default: return 0x00;
+			}
+	
+	}
 		
 /**
 * Load a program from a text file called prog.txt
@@ -34,7 +73,6 @@
 */
 	void Program4c04_t_loadProgram(void * eOBJ)
 	{
-		eSELF(Program4c04_t);
 	
 		/*
 		* Assembly rules:
@@ -65,9 +103,11 @@
 		*
 		*/
 		
+		eSELF(Program4c04_t);
+		
 		//make pointer to parent to use it's methods
 			//saves us typing self->strings->
-			ePARENT(String4c04_t, strings);
+			//ePARENT(String4c04_t, strings);
 	
 		//load program into program memory
 			FILE * fp;
@@ -142,15 +182,15 @@
 							uint8_t cHere = (uint8_t)fgetc(fp);
 							//printf("%c", cHere);
 							
-							if(eCALL(self, isHexChar, cHere) == false){
+							if(self->isHexChar(cHere) == false){
 								continue;
 							}
 							
 							if(hiSet == false){
-								hi = eCALL(self, getHexChar, cHere);
+								hi = self->getHexChar(cHere);
 								hiSet = true;
 							} else {
-								lo = eCALL(self, getHexChar, cHere);
+								lo = self->getHexChar(cHere);
 								addr =  (uint8_t)(hi << 4) | lo;
 								break;
 							}
@@ -420,7 +460,11 @@
 							}
 					
 						//command line
-							command[col] = c;
+							if(c != ' ' && c != '\t'){
+								command[col] = c;
+							} else {
+								continue;
+							}
 							
 							if(col == 2){
 							
@@ -553,11 +597,11 @@
 							} else {
 				
 								//check this char is in valid hex char set
-									if(eCALL(self, isHexChar, c)== false){
+									if(self->isHexChar(c) == false){
 										continue;
 									}
 									
-									tmp = (uint8_t)eCALL(self, getHexChar, c);
+									tmp = (uint8_t)self->getHexChar(c);
 						
 								//write only when hex built from both chars in txt file
 									if(i == 1){
@@ -605,39 +649,53 @@
 			char line [50] = "";
 			char num[5];
 
+			//fill ram with NOP's (0's)
 			for(uint8_t i = 0; i < 128; i++){
 				strncpy(self->code[i], strings->strncatcat(strcpy(line, "$"), 49, strings->hex(i, 2, num),": NOP c2", NULL), 12);
 			}
 		
-			////start at program address
-			//	uint16_t addr = self->progMemLoc;
-			//	uint16_t lineAddr;
-			//	char cycles[10];
-			//
-			//while(addr < self->memLength){
-			//
-			//	//start line string
-			//		lineAddr = addr;
-			//		uint8_t opcode = self->cpu->RAM[addr];
-			//		snprintf(cycles, 4,"%d", self->cpu->instructions[opcode].cycles);
-			//		strings->strncatcat(strcpy(line, "$"), 49, strings->hex(addr, 2, num),": ",self->cpu->instructions[opcode].name," c",cycles, NULL);
-			//
-			//	//get next addr
-			//		addr++;
-			//
-			//	//use instructions array to fill in the mem locations where data and not opcodes are
-			//		for(int i = 0; i < self->cpu->instructions[opcode].pcoShifts; i++){
-			//
-			//			strcpy(self->code[addr], "---");
-			//			addr++;
-			//
-			//		}
-			//
-			//	//write that line to code array
-			//		strcpy(self->code[lineAddr], line);
-			//
-			//}
-			//
+			//start at program address
+				uint16_t addr = PROG_MEM_LOC;
+				uint16_t lineAddr;
+				char cycles[10];
+				
+			int j = 1;
+			
+			while(addr < MEM_LENGTH){
+
+				//start line string
+					lineAddr = addr;
+					uint8_t opcode = self->cpu->RAM[addr];
+					snprintf(cycles, 4,"%d", self->cpu->instructions[opcode].cycles);
+					strings->strncatcat(
+						strcpy(line, "$"),
+						49,
+						strings->hex(addr, 2, num),
+						": ",
+						self->cpu->instructions[opcode].name,
+						" c",
+						cycles,
+						NULL
+					);
+					
+				//get next addr
+					addr++;
+
+				//use instructions array to fill in the mem locations where data and not opcodes are
+					for(int i = 0; i < self->cpu->instructions[opcode].pcoShifts; i++){
+
+						strcpy(self->code[addr], "---");
+						addr++;
+
+					}
+
+				//write that line to code array
+					strcpy(self->code[lineAddr], line);
+					
+					j++;
+
+			}
+
 			//for(uint16_t i = self->progMemLoc; i < self->memLength; i++){
 			//	//	printf("%s\n", code[i]);
 			//}

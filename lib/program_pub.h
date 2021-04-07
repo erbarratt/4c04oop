@@ -18,13 +18,10 @@
 				struct CPU4c04_t* cpu;
 				struct Debug4c04_t* console;
 				char code[128][100];
-				uint16_t memLength;
-				uint16_t progMemLoc;
-				uint16_t stackMemLoc;
 			
 			//public methods
-				bool (*isHexChar)(void * eOBJ, uint8_t c);
-				uint8_t (*getHexChar)(void * eOBJ, uint8_t c);
+				bool (*isHexChar)(uint8_t c);
+				uint8_t (*getHexChar)(uint8_t c);
 				void (*loadProgram)(void * eOBJ);
 				void (*disassembleCode)(void * eOBJ);
 			
@@ -34,8 +31,8 @@
 	
 	//public function delcaration footprint
 		void Program4c04_t_instantiate(void * eOBJ, struct CPU4c04_t* cpu, struct Debug4c04_t* console);
-		bool Program4c04_t_isHexChar(void * eOBJ, uint8_t c);
-		uint8_t Program4c04_t_getHexChar(void * eOBJ, uint8_t c);
+		bool Program4c04_t_isHexChar(uint8_t c);
+		uint8_t Program4c04_t_getHexChar(uint8_t c);
 		void Program4c04_t_loadProgram(void * eOBJ);
 		void Program4c04_t_disassembleCode(void * eOBJ);
 

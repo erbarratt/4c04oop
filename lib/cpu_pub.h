@@ -5,7 +5,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include "eOOPc.h"
-#include "common.h"
 	
 	/**
 	* bit field for cpu status
