@@ -136,8 +136,6 @@
 	* @param var v The new value
 	*/
 		#define eSET(o, p, v) o->set_##p(o, v)
-
-	
 	
 	/**
 	* Method call wrapper that passes object as first argument for use of eSELF()
