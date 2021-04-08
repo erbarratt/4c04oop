@@ -299,12 +299,14 @@
 		
 			eSELF(Draw4c04_t);
 			
-			//for(uint16_t i = PROG_MEM_LOC; i < MEM_LENGTH; i++){
-			//		printf("%#x: %s\n", i, self->program->code[i]);
-			//}
+			//printf("%p\n", (void*)self->program->code);
 			
-			printf("%#x\n", addr);
-			printf("%s\n", self->program->code[addr]);
+			for(uint16_t i = PROG_MEM_LOC; i < MEM_LENGTH; i++){
+				//printf("--%#x: %p %s\n", i, (void*)self->program->code[i], self->program->code[i]);
+			}
+			
+			//printf("%#x\n", addr);
+			//printf("%s\n", self->program->code[addr]);
 		
 			char * msg = "Code Lines";
 			int msgX = 780 + (int)(200 - (strlen(msg)*10)) / 2;
@@ -327,8 +329,8 @@
 				while(lower < midPoint){
 					
 					start--;
-					printf("%#x\n", start);
-					printf("%s\n", self->program->code[start]);
+					//printf("%#x\n", start);
+					//printf("%s\n", self->program->code[start]);
 					if(strcmp(self->program->code[start], "---") != 0){
 						lower++;
 						lastOpAddrFound = start;
@@ -355,7 +357,7 @@
 			//now move forward from this position, ignore --- and store the op line
 				while(count < 8){
 				
-					if(strcmp(self->program->code[start], "---") != 0){
+					if(strcmp(self->program->code[start], "---") != 0 && start <= MEM_LENGTH){
 						strcpy(lines[count], self->program->code[start]);
 						count++;
 					}
@@ -403,6 +405,8 @@
 	void Window4c04_t_draw(void * eOBJ)
 	{
 		eSELF(Draw4c04_t);
+		
+		//printf("%p\n", (void*)self->program->code);
 		
 		//clear window
 			eCALLna(self->window, clearWindow);

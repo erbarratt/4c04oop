@@ -16,6 +16,18 @@
 			
 			//instantiate parent object
 				eCONSTRUCT(String4c04_t, &self->strings);
+				
+			//upcast a pointer to use strings as a local var
+				ePARENT(String4c04_t, strings);
+				
+			//make space and allocate for strings
+			//128 char array pointers
+				char line[50];
+				char num[5];
+				for (int i = 0; i < MEM_LENGTH; i++){
+                    self->code[i] = (char*)malloc((100+1) * sizeof(char)); // yeah, I know sizeof(char) is 1, but to make it clear...
+                    strncpy(self->code[i], strings->strncatcat(strcpy(line, "$"), 49, strings->hex(i, 2, num),": NOP c2", NULL), 12);
+				}
 			
 			//bind params
 				self->cpu = cpu;
@@ -648,11 +660,6 @@
 			
 			char line [50] = "";
 			char num[5];
-
-			//fill ram with NOP's (0's)
-			for(uint16_t i = 0; i < MEM_LENGTH; i++){
-				strncpy(self->code[i], strings->strncatcat(strcpy(line, "$"), 49, strings->hex(i, 2, num),": NOP c2", NULL), 12);
-			}
 		
 			//start at program address
 				uint16_t addr = PROG_MEM_LOC;
@@ -682,22 +689,28 @@
 					addr++;
 
 				//use instructions array to fill in the mem locations where data and not opcodes are
-					for(int i = 0; i < self->cpu->instructions[opcode].pcoShifts; i++){
-
+					for(int i = 0; i < self->cpu->instructions[opcode].pcoShifts && addr < MEM_LENGTH; i++){
+					
 						strcpy(self->code[addr], "---");
 						addr++;
 
 					}
-
-				//write that line to code array
-					strcpy(self->code[lineAddr], line);
 					
-					j++;
+				if(addr <= MEM_LENGTH){
+
+					//write that line to code array
+						strcpy(self->code[lineAddr], line);
+						
+						j++;
+						
+				} else {
+					break;
+				}
 
 			}
-
+			
 			for(uint16_t i = PROG_MEM_LOC; i < MEM_LENGTH; i++){
-					printf("%s\n", self->code[i]);
+				//printf("%#x: %p %s\n", i, (void*)self->code[i], self->code[i]);
 			}
 		
 		}

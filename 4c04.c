@@ -127,6 +127,10 @@ int main(void){
 
 				//draw current state
 					eCALLna(draw,draw);
+					
+					for(uint16_t i = PROG_MEM_LOC; i < MEM_LENGTH; i++){
+						//printf("%#x: %p %s\n", i, (void*)program->code[i], program->code[i]);
+					}
 
 			}
 

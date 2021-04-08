@@ -17,7 +17,7 @@
 			//public props
 				struct CPU4c04_t* cpu;
 				struct Debug4c04_t* console;
-				char code[128][100];
+				char * code[MEM_LENGTH];
 			
 			//public methods
 				bool (*isHexChar)(uint8_t c);

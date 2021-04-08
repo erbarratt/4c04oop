@@ -172,7 +172,7 @@
 		void CPU4c04_t_stackPush(void * eOBJ, uint8_t data)
 		{
 			eSELF(CPU4c04_t);
-			eCALL(self->vmt, write, self->STP, data);
+			self->vmt->write(self, self->STP, data);
 			self->STP--;
 			self->vmt->setDrawflag(self, STP, true);
 		}
@@ -926,7 +926,9 @@
 	* 3 cycles
 	* @return void
 	*/
-		void CPU4c04_t_JSR(void * eOBJ){ eSELF(CPU4c04_t);
+		void CPU4c04_t_JSR(void * eOBJ)
+		{
+			eSELF(CPU4c04_t);
 		
 			switch(self->CRE){
 			
