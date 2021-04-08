@@ -1,3 +1,6 @@
+/**
+* CPU class public delcaration file
+*/
 #ifndef INC_4C04_CPU_PUB_H
 #define INC_4C04_CPU_PUB_H
 
@@ -77,9 +80,5 @@
 		};
 		
 		void CPU4c04_t_instantiate(void * eOBJ);
-		uint8_t CPU4c04_t_findHexFromCommand(void * eOBJ, uint8_t * command);
-		void CPU4c04_t_reset(void * eOBJ);
-		void CPU4c04_t_execute(void * eOBJ);
-		uint8_t CPU4c04_t_getDrawflag(void * eOBJ, DRAWFLAGS f);
 
 #endif //INC_4C04_CPU_PUB_H

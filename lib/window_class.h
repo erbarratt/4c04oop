@@ -1,3 +1,6 @@
+/**
+* Window class private delcaration file
+*/
 #ifndef INC_4C04_WINDOW_CLASS_H
 #define INC_4C04_WINDOW_CLASS_H
 

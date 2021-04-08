@@ -1,3 +1,8 @@
+/**
+* Debug class public delcaration file
+*
+* Debug has no _pri.h file.
+*/
 #ifndef INC_4C04_DEBUG_H
 #define INC_4C04_DEBUG_H
 
@@ -18,7 +23,5 @@
 	
 	//public function delcaration footprint
 		void Debug4c04_t_instantiate(void * eOBJ);
-		void Debug4c04_t_consoleLog(char * msg);
-		void Debug4c04_t_consoleErr(char * msg);
 
 #endif //INC_4C04_DEBUG_H

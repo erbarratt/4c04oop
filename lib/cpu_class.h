@@ -1,3 +1,6 @@
+/**
+* CPU class private delcaration file
+*/
 #ifndef INC_4C04_CPU_CLASS_H
 #define INC_4C04_CPU_CLASS_H
 
@@ -55,7 +58,6 @@
 		void CPU4c04_t_loadInstructions(void * eOBJ);
 		
 		void        CPU4c04_t_setDrawflag(void * eOBJ, DRAWFLAGS f, bool v);
-		uint8_t     CPU4c04_t_getDrawflag(void * eOBJ, DRAWFLAGS f);
 		uint8_t     CPU4c04_t_read(void * eOBJ, uint8_t addr, bool incPCO);
 		void        CPU4c04_t_write(void * eOBJ, uint8_t addr, uint8_t data);
 		void        CPU4c04_t_stackPush(void * eOBJ, uint8_t data);
@@ -159,5 +161,10 @@
 				CPU4c04_t_vmt * vmt;
 			
 		} CPU4c04_t;
+		
+		uint8_t CPU4c04_t_getDrawflag(void * eOBJ, DRAWFLAGS f);
+		uint8_t CPU4c04_t_findHexFromCommand(void * eOBJ, uint8_t * command);
+		void CPU4c04_t_reset(void * eOBJ);
+		void CPU4c04_t_execute(void * eOBJ);
 
 #endif //INC_4C04_CPU_CLASS_H

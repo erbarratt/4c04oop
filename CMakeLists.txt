@@ -4,7 +4,7 @@ project(4c04)
 
 set(CMAKE_C_STANDARD 11)
 
-ADD_DEFINITIONS(-Wall -Wextra -Wconversion -pedantic -c -g -O0 -std=gnu99)
+ADD_DEFINITIONS(-Wall -Wextra -Wconversion -pedantic -c -g -O3 -std=c99)
 
 find_package(X11 REQUIRED)
 

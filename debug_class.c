@@ -1,7 +1,18 @@
+/*
+* Debug class source file
+*
+* Since the debug class struct only has public members, there is no need for a _pri.h file,
+* therefor private source function declarations are in this file
+*
+* The debug class simply writes messages to the console or stderr
+*/
 #include <stdio.h>
-#include <stdlib.h>
 #include "lib/debug_pub.h"
 #include "lib/eOOPc.h"
+
+	//private source function declarations
+		void Debug4c04_t_consoleLog(char * msg);
+		void Debug4c04_t_consoleErr(char * msg);
 
 	/**
 	* Create the window of a given height and width

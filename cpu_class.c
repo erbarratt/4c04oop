@@ -1,3 +1,11 @@
+/*
+* CPU class source file
+*
+* Contains private definitions for the Virtual Method Table object and main CPU object
+*
+* The CPU class holds all instructions functions and represents the internals of the CPU
+*/
+
 #include "lib/cpu_pub.h"
 #include "lib/cpu_class.h"
 
@@ -118,18 +126,6 @@
 			else
 				self->drawflags &= ~f;
 			
-		}
-		
-	/**
-	* Returns the value of a specific bit of the drawflags
-	* @param void * eOBJ Self
-	* @param DRAWFLAGS f The bit
-	* @return uint8_t
-	 */
-		uint8_t CPU4c04_t_getDrawflag(void * eOBJ, DRAWFLAGS f)
-		{
-			eSELF(CPU4c04_t);
-			return ((self->drawflags & f) > 0) ? 1 : 0;
 		}
 		
 	/*
@@ -1271,6 +1267,18 @@
 			//reset CPU now, which also acts as definition for struct members
 				eCALLna(self, reset);
 			
+		}
+		
+	/**
+	* Returns the value of a specific bit of the drawflags
+	* @param void * eOBJ Self
+	* @param DRAWFLAGS f The bit
+	* @return uint8_t
+	 */
+		uint8_t CPU4c04_t_getDrawflag(void * eOBJ, DRAWFLAGS f)
+		{
+			eSELF(CPU4c04_t);
+			return ((self->drawflags & f) > 0) ? 1 : 0;
 		}
 		
 	/**

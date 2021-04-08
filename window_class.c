@@ -1,3 +1,8 @@
+/*
+* Window class source file
+*
+* The window class deal with management of the X11 window, creation, population and temrination
+*/
 #include "lib/window_pub.h"         //public declaration
 #include "lib/window_class.h"       //private typedef declaration
 		

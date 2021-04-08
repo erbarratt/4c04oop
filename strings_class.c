@@ -1,8 +1,20 @@
+/*
+* Strings class source file
+*
+* Since the strings class struct only has public members, there is no need for a _pri.h file,
+* therefor private source function declarations are in this file
+*
+* The strings class deals with string manipulation and conversion
+*/
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
 #include "lib/strings_pub.h"
 #include "lib/eOOPc.h"
+
+	//private source function declarations
+		char * String4c04_t_strncatcat(char * dest, size_t max, const char* strArgs, ...);
+		char * String4c04_t_hex(uint32_t hex, size_t size, char * dest);
 
 	/**
 	* Create the window of a given height and width

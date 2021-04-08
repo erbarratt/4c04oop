@@ -1,3 +1,8 @@
+/**
+* Program class public delcaration file
+*
+* Program has no _pri.h file.
+*/
 #ifndef INC_4C04_PROGRAM_PUB_H
 #define INC_4C04_PROGRAM_CLASS_H
 
@@ -31,9 +36,5 @@
 	
 	//public function delcaration footprint
 		void Program4c04_t_instantiate(void * eOBJ, struct CPU4c04_t* cpu, struct Debug4c04_t* console);
-		bool Program4c04_t_isHexChar(uint8_t c);
-		uint8_t Program4c04_t_getHexChar(uint8_t c);
-		void Program4c04_t_loadProgram(void * eOBJ);
-		void Program4c04_t_disassembleCode(void * eOBJ);
 
 #endif //INC_4C04_PROGRAM_PUB_H

@@ -1,3 +1,9 @@
+/*
+* Draw class source file
+*
+* The draw class creates the strings to draw to the window from the different elements
+* of the 4c04 system
+*/
 #include <stdio.h>
 #include "lib/draw_pub.h"
 #include "lib/draw_class.h"
