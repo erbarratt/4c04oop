@@ -1,6 +1,5 @@
 #include "lib/cpu_pub.h"
 #include "lib/cpu_class.h"
-#include "lib/common.h"
 
 	/**
 	* Instantiate CPU VMT object

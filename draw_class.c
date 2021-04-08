@@ -1,10 +1,8 @@
-#include "lib/common.h"
+#include <stdio.h>
 #include "lib/draw_pub.h"
 #include "lib/draw_class.h"
 #include "lib/window_pub.h"
 #include "lib/program_pub.h"
-
-#include <stdio.h>
 
 	/**
 	* Instantiate Draw VMT object

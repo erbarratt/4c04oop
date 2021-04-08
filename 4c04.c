@@ -34,9 +34,8 @@
 * 		Launch via Putty from Ubuntu (./4c04)
 *
 */
-#include <unistd.h> //usleep
-#include <stdbool.h>
-#include <stdio.h>
+#include <unistd.h>     //usleep
+#include <stdbool.h>    //auto play
 #include "lib/eOOPc.h"
 #include "lib/window_pub.h"
 #include "lib/program_pub.h"
@@ -44,104 +43,99 @@
 
 int main(void){
 
-	struct Debug4c04_t* console = eNEW(Debug4c04_t);
-	eCONSTRUCT(Debug4c04_t, console);
+	//instantiate objects
+		struct Debug4c04_t* console = eNEW(Debug4c04_t);
+		eCONSTRUCT(Debug4c04_t, console);
+		
+		struct CPU4c04_t* cpu = eNEW(CPU4c04_t);
+		eCONSTRUCT(CPU4c04_t, cpu);
 	
-	struct CPU4c04_t* cpu = eNEW(CPU4c04_t);
-	eCONSTRUCT(CPU4c04_t, cpu);
+		struct Program4c04_t* program = eNEW(Program4c04_t);
+		eCONSTRUCT(Program4c04_t, program, cpu, console);
+		
+		struct Window4c04_t * window = eNEW(Window4c04_t);
+		eCONSTRUCT(Window4c04_t, window, console, 640, 1000);
 
-	struct Program4c04_t* program = eNEW(Program4c04_t);
-	
-	eCONSTRUCT(Program4c04_t, program, cpu, console);
-
+	//load and disassemble program before passing to draw object
 		console->consoleLog("4c04 L EOT CPU Emulator\nSystem Booting...\n");
-
-	eCALLna(program,loadProgram);
-
+		eCALLna(program,loadProgram);
 		console->consoleLog("Program Loaded...\n");
-
-	eCALLna(program,disassembleCode);
-
+		eCALLna(program,disassembleCode);
 		console->consoleLog("Opening Window...\n");
-
-	struct Window4c04_t * window = eNEW(Window4c04_t);
-	eCONSTRUCT(Window4c04_t, window, console, 640, 1000);
 	
-	struct Draw4c04_t* draw = eNEW(Draw4c04_t);
-	eCONSTRUCT(Draw4c04_t, draw, window, cpu, program);
+	//draw object, passing other object pointers
+		struct Draw4c04_t* draw = eNEW(Draw4c04_t);
+		eCONSTRUCT(Draw4c04_t, draw, window, cpu, program);
 
 	//auto play?
 		bool autoPlaySlow = false;
 		bool autoPlayFast = false;
 
-	while (1) {
-
-		if(autoPlaySlow || autoPlayFast){
-
-			usleep(autoPlaySlow ? 200000 : 500);
-
-			//send random key code so auto continues
-				eCALLna(window, randKeycodeEvnt);
-
-		}
-
-		eCALLna(window, getNextEvent);
-
-		if (window->evnt->type == KeyPress) {
-
-			if(window->evnt->xkey.keycode == 24){
-
-				//quit "q"
-					break;
-
-			} else if (window->evnt->xkey.keycode == 27) {
-
-				//restart "r"
-					eCALLna(cpu, reset);
-
-				//load program again
-					eCALLna(program,loadProgram);
-
-				//dissemble code
-					eCALLna(program,disassembleCode);
-
-				//draw current state
-					eCALLna(draw,draw);
-
-			} else if(window->evnt->xkey.keycode == 38){
-
-				//autoplay toggle
-					autoPlaySlow = (autoPlaySlow) ? false : true;
-					autoPlayFast = false;
-
-			}  else if(window->evnt->xkey.keycode == 39){
-
-				//autoplay toggle
-					autoPlayFast = (autoPlayFast) ? false : true;
-					autoPlaySlow = false;
-
-			} else {
-
-				//progress through next cycle
-					eCALLna(cpu,execute);
-
-				//draw current state
-					eCALLna(draw,draw);
-					
-					for(uint16_t i = PROG_MEM_LOC; i < MEM_LENGTH; i++){
-						//printf("%#x: %p %s\n", i, (void*)program->code[i], program->code[i]);
-					}
-
+	//main loop
+		while (1) {
+	
+			if(autoPlaySlow || autoPlayFast){
+	
+				usleep(autoPlaySlow ? 200000 : 500);
+	
+				//send random key code so auto continues
+					eCALLna(window, randKeycodeEvnt);
+	
 			}
-
-		} else {
-
-			//all other events
-				eCALLna(draw,draw);
-
+	
+			eCALLna(window, getNextEvent);
+	
+			if (window->evnt->type == KeyPress) {
+	
+				if(window->evnt->xkey.keycode == 24){
+	
+					//quit "q"
+						break;
+	
+				} else if (window->evnt->xkey.keycode == 27) {
+	
+					//restart "r"
+						eCALLna(cpu, reset);
+	
+					//load program again
+						eCALLna(program,loadProgram);
+	
+					//dissemble code
+						eCALLna(program,disassembleCode);
+	
+					//draw current state
+						eCALLna(draw,draw);
+	
+				} else if(window->evnt->xkey.keycode == 38){
+	
+					//autoplay toggle
+						autoPlaySlow = (autoPlaySlow) ? false : true;
+						autoPlayFast = false;
+	
+				}  else if(window->evnt->xkey.keycode == 39){
+	
+					//autoplay toggle
+						autoPlayFast = (autoPlayFast) ? false : true;
+						autoPlaySlow = false;
+	
+				} else {
+	
+					//progress through next cycle
+						eCALLna(cpu,execute);
+	
+					//draw current state
+						eCALLna(draw,draw);
+	
+				}
+	
+			} else {
+	
+				//all other events
+					eCALLna(draw,draw);
+	
+			}
+	
 		}
-
-	}
 
 	eCALLna(window, closeWindow);
 
