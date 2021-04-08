@@ -9,7 +9,6 @@
 			void (*loadInstructions)(void * eOBJ);
 			
 			void        (*setDrawflag)(void * eOBJ, DRAWFLAGS f, bool v);
-			uint8_t     (*getDrawflag)(void * eOBJ, DRAWFLAGS f);
 			uint8_t     (*read)(void * eOBJ, uint8_t addr, bool incPCO);
 			void        (*write)(void * eOBJ, uint8_t addr, uint8_t data);
 			void        (*stackPush)(void * eOBJ, uint8_t data);
@@ -154,6 +153,7 @@
 				uint8_t (*findHexFromCommand)(void * eOBJ, uint8_t * command);
 				void (*reset)(void * eOBJ);
 				void (*execute)(void * eOBJ);
+				uint8_t (*getDrawflag)(void * eOBJ, DRAWFLAGS f);
 				
 			//private methods
 				CPU4c04_t_vmt * vmt;

@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "eOOPc.h"
+#include "common.h"
 	
 	/**
 	* bit field for cpu status
@@ -58,7 +59,7 @@
 				uint8_t AR1;
 				uint8_t AR2;
 				uint8_t AR3;
-				uint8_t RAM[256];
+				uint8_t RAM[MEM_LENGTH];
 				bool C;
 				bool Z;
 				bool V;
@@ -71,6 +72,7 @@
 				uint8_t (*findHexFromCommand)(void * eOBJ, uint8_t * command);
 				void (*reset)(void * eOBJ);
 				void (*execute)(void * eOBJ);
+				uint8_t (*getDrawflag)(void * eOBJ, DRAWFLAGS f);
 			
 		};
 		
@@ -78,5 +80,6 @@
 		uint8_t CPU4c04_t_findHexFromCommand(void * eOBJ, uint8_t * command);
 		void CPU4c04_t_reset(void * eOBJ);
 		void CPU4c04_t_execute(void * eOBJ);
+		uint8_t CPU4c04_t_getDrawflag(void * eOBJ, DRAWFLAGS f);
 
 #endif //INC_4C04_CPU_PUB_H

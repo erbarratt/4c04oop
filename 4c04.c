@@ -36,10 +36,11 @@
 */
 #include <unistd.h> //usleep
 #include <stdbool.h>
+#include <stdio.h>
 #include "lib/eOOPc.h"
 #include "lib/window_pub.h"
-#include "lib/debug_pub.h"
 #include "lib/program_pub.h"
+#include "lib/draw_pub.h"
 
 int main(void){
 
@@ -53,19 +54,21 @@ int main(void){
 	
 	eCONSTRUCT(Program4c04_t, program, cpu, console);
 
-	console->consoleLog("4c04 L EOT CPU Emulator\nSystem Booting...\n");
+		console->consoleLog("4c04 L EOT CPU Emulator\nSystem Booting...\n");
 
 	eCALLna(program,loadProgram);
 
-	console->consoleLog("Program Loaded...\n");
+		console->consoleLog("Program Loaded...\n");
 
 	eCALLna(program,disassembleCode);
 
-	console->consoleLog("Opening Window...\n");
+		console->consoleLog("Opening Window...\n");
 
 	struct Window4c04_t * window = eNEW(Window4c04_t);
-	eCONSTRUCT(Window4c04_t, window, 640, 1000);
-	eCALLna(window, getNextEvent);
+	eCONSTRUCT(Window4c04_t, window, console, 640, 1000);
+	
+	struct Draw4c04_t* draw = eNEW(Draw4c04_t);
+	eCONSTRUCT(Draw4c04_t, draw, window, cpu, program);
 
 	//auto play?
 		bool autoPlaySlow = false;
@@ -103,7 +106,7 @@ int main(void){
 					eCALLna(program,disassembleCode);
 
 				//draw current state
-					//draw_all(display, window, gc);
+					eCALLna(draw,draw);
 
 			} else if(window->evnt->xkey.keycode == 38){
 
@@ -123,14 +126,14 @@ int main(void){
 					eCALLna(cpu,execute);
 
 				//draw current state
-					//draw_all(display, window, gc);
+					eCALLna(draw,draw);
 
 			}
 
 		} else {
 
 			//all other events
-				//draw_all(display, window, gc);
+				eCALLna(draw,draw);
 
 		}
 
@@ -138,7 +141,11 @@ int main(void){
 
 	eCALLna(window, closeWindow);
 
+	eDESTROY(console);
+	eDESTROY(cpu);
+	eDESTROY(program);
 	eDESTROY(window);
+	eDESTROY(draw);
 	
 	return 0;
  

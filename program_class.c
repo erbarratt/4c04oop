@@ -650,7 +650,7 @@
 			char num[5];
 
 			//fill ram with NOP's (0's)
-			for(uint8_t i = 0; i < 128; i++){
+			for(uint16_t i = 0; i < MEM_LENGTH; i++){
 				strncpy(self->code[i], strings->strncatcat(strcpy(line, "$"), 49, strings->hex(i, 2, num),": NOP c2", NULL), 12);
 			}
 		
@@ -696,8 +696,8 @@
 
 			}
 
-			//for(uint16_t i = self->progMemLoc; i < self->memLength; i++){
-			//	//	printf("%s\n", code[i]);
-			//}
+			for(uint16_t i = PROG_MEM_LOC; i < MEM_LENGTH; i++){
+					printf("%s\n", self->code[i]);
+			}
 		
 		}

@@ -14,7 +14,6 @@
 			self->loadInstructions = &CPU4c04_t_loadInstructions;
 			
 			self->setDrawflag = &CPU4c04_t_setDrawflag;
-			self->getDrawflag = &CPU4c04_t_getDrawflag;
 			self->read = &CPU4c04_t_read;
 			self->write = &CPU4c04_t_write;
 			self->stackPush = &CPU4c04_t_stackPush;
@@ -146,7 +145,7 @@
 			eSELF(CPU4c04_t);
 				if(incPCO){
 				self->PCO++;
-				eCALL(self->vmt,setDrawflag, PCO, true);
+				self->vmt->setDrawflag(self, PCO, true);
 			}
 			return self->RAM[addr];
 		}
@@ -175,7 +174,7 @@
 			eSELF(CPU4c04_t);
 			eCALL(self->vmt, write, self->STP, data);
 			self->STP--;
-			eCALL(self->vmt,setDrawflag, STP, true);
+			self->vmt->setDrawflag(self, STP, true);
 		}
 		
 	/*
@@ -188,7 +187,7 @@
 			eSELF(CPU4c04_t);
 			self->STP++;
 			uint8_t data = self->RAM[self->STP];
-			eCALL(self->vmt,setDrawflag, STP, true);
+			self->vmt->setDrawflag(self, STP, true);
 			return data;
 		}
 		
@@ -231,19 +230,19 @@
 				case 0:
 				default:
 					self->AR0 = data;
-					eCALL(self->vmt,setDrawflag, AR0, true);
+					self->vmt->setDrawflag(self, AR0, true);
 				break;
 				case 1:
 					self->AR1= data;
-					eCALL(self->vmt,setDrawflag, AR1, true);
+					self->vmt->setDrawflag(self, AR1, true);
 				break;
 				case 2:
 					self->AR2= data;
-					eCALL(self->vmt,setDrawflag, AR2, true);
+					self->vmt->setDrawflag(self, AR2, true);
 				break;
 				case 3:
 					self->AR3= data;
-					eCALL(self->vmt,setDrawflag, AR3, true);
+					self->vmt->setDrawflag(self, AR3, true);
 				break;
 				
 			}
@@ -267,11 +266,11 @@
 				case 1:
 				default:
 					self->IR1= data;
-					eCALL(self->vmt,setDrawflag, IR1, true);
+					self->vmt->setDrawflag(self, IR1, true);
 				break;
 				case 2:
 					self->IR2= data;
-					eCALL(self->vmt,setDrawflag, IR2, true);
+					self->vmt->setDrawflag(self, IR2, true);
 				break;
 				
 			}
@@ -289,7 +288,7 @@
 		{
 			eSELF(CPU4c04_t);
 			self->PCO= data;
-			eCALL(self->vmt,setDrawflag, PCO, true);
+			self->vmt->setDrawflag(self, PCO, true);
 			return data;
 		}
 
@@ -313,7 +312,9 @@
 	* Z,N
 	* @return void
 	*/
-		void CPU4c04_t_LRV(void * eOBJ){ eSELF(CPU4c04_t);
+		void CPU4c04_t_LRV(void * eOBJ)
+		{
+			eSELF(CPU4c04_t);
 		
 			switch(self->CRE){
 				
@@ -396,7 +397,7 @@
 					
 				//set IR2 to be the value of the register set in IR2
 					case 2:
-						self->vmt->setIr(self, 2, self->vmt->read(self, self->vmt->regVal(self, self->IR2), true));
+						self->vmt->setIr(self, 2, self->vmt->read(self, self->vmt->regVal(self, self->IR2), false));
 					break;
 					
 				//load the value at IR2 into register chosen in IR1
@@ -1259,7 +1260,8 @@
 			//public methods
 				self->findHexFromCommand = &CPU4c04_t_findHexFromCommand;
 				self->reset = &CPU4c04_t_reset;
-				self->execute = &CPU4c04_t_reset;
+				self->execute = &CPU4c04_t_execute;
+				self->getDrawflag = &CPU4c04_t_getDrawflag;
 				
 			//private methods vmt
 				self->vmt = eNEW(CPU4c04_t_vmt);
