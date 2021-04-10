@@ -140,9 +140,8 @@ int main(void){
 	eCALLna(window, closeWindow);
 
 	eDESTROY(console);
-	eDESTROY(cpu);
-	eDESTROY(program);
-	eDESTROY(window);
+	
+	//draw will free window, cpu and program
 	eDESTROY(draw);
 	
 	return 0;
